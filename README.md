@@ -10,7 +10,7 @@ RAID to technologia wirtualizacji przechowywania danych, która łączy wiele ko
 
 Dane są dystrybuowane na dyskach na jeden z kilku sposobów, określanych jako poziomy RAID, w zależności od wymaganego poziomu nadmiarowości i wydajności. Różne schematy lub układy dystrybucji danych są nazywane słowem "RAID", po którym następuje liczba, na przykład RAID 0 lub RAID 1. Każdy schemat lub poziom RAID zapewnia inną równowagę między kluczowymi celami: niezawodnością, dostępnością, wydajnościąi pojemnością. Poziomy RAID większe niż RAID 0 zapewniają ochronę przed nieodwracalnymi błędami odczytu sektora, a także przed awariami całych dysków fizycznych.
 
-![image](https://user-images.githubusercontent.com/13750868/140877402-8ca2294a-b49b-4459-9e80-d6f160245bb8.png)
+[center]![image](https://user-images.githubusercontent.com/13750868/140877402-8ca2294a-b49b-4459-9e80-d6f160245bb8.png)
 
 
 

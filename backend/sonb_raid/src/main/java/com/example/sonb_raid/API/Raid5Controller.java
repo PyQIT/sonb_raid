@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/raid3")
+@RequestMapping("/api/raid5")
 public class Raid3Controller {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public void getRaid3(){
+    public void getRaid5(){
 
     }
 }

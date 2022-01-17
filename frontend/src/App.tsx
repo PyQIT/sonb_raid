@@ -131,7 +131,6 @@ function App() {
                 <form className="dmgForm" action="#" method="post">
                     <h3>Podaj ID sektora do uszkodzenia:</h3>
                     <input type="text" id="f-id" name="selector"></input>
-                    <input type="submit" id="f-send" name="selector" value="Potwierdź wybór"></input>
                 </form>
             </div>
             <a href="/" className="button">Wyślij</a>

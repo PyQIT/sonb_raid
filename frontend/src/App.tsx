@@ -1,18 +1,18 @@
 import React, {useState} from 'react';
+import { ChangeEvent } from 'react';
 import Axios from "axios";
 import './App.css';
 
-function App() {
+function App(this: any) {
 
     Axios.defaults.baseURL = "http://localhost:8080";
 
-    const[raidData, setRaidData] = useState("");
-    const[raidType, setRaidType] = useState("");
+    let [raidData, setRaidData] = useState("");
+    let [raidType, setRaidType] = useState("");
     const[raidReceived, setRaidReceived] = useState("");
 
-
     const postRaidData = () => {
-        Axios.post("/text/writing").then(
+        Axios.post("/text/writing", {},{params: {content: raidData}}).then(
             (response) =>{
                 console.log(response);
                 setRaidData(response.data);
@@ -21,7 +21,7 @@ function App() {
     };
 
     const postRaidType = () => {
-        Axios.post("/raid").then(
+        Axios.post("/raid", {},{params: {type: raidType}}).then(
             (response) =>{
                 console.log(response);
                 setRaidType(response.data);
@@ -38,10 +38,26 @@ function App() {
         );
     }
 
+    const checkRaid0 = () => {
+        raidType = "0";
+        postRaidType();
+    }
 
+    const checkRaid1 = () => {
+        raidType = "1";
+        postRaidType();
+    }
 
+    const checkRaid2 = () => {
+        raidType = "2";
+        postRaidType();
+    }
 
-  return (
+    const onChange = (e: ChangeEvent<HTMLInputElement>)=> {
+        raidData = e.target.value;
+    }
+
+    return (
     <div className="App">
 
       <header className="App-header">
@@ -58,9 +74,8 @@ function App() {
                         type="radio"
                         id="f-option"
                         name="selector"
-                        checked={raidType === '0'}
-                        onChange={postRaidType}
-                        ></input>
+                        onChange={checkRaid0}
+                        />
                         <label htmlFor="f-option">RAID 0</label>
 
                         <div className="check"></div>
@@ -72,9 +87,8 @@ function App() {
                         type="radio"
                         id="s-option"
                         name="selector"
-                        checked={raidType === '1'}
-                        onChange={postRaidType}
-                    ></input>
+                        onChange={checkRaid1}
+                    />
                         <label htmlFor="s-option">RAID 1</label>
 
                         <div className="check">
@@ -88,9 +102,8 @@ function App() {
                         type="radio"
                         id="t-option"
                         name="selector"
-                        checked={raidType === '2'}
-                        onChange={postRaidType}
-                    ></input>
+                        onChange={checkRaid2}
+                    />
                         <label htmlFor="t-option">RAID 3</label>
 
                         <div className="check">
@@ -103,7 +116,7 @@ function App() {
             <div className="radioButtonsContainer">
                 <h2>Wpisz tekst do wyslania</h2>
                 <form>
-                    <textarea placeholder="Wpisz tekst...">{raidData}</textarea>
+                    <textarea placeholder="Wpisz tekst..." onChange={onChange}/>
                 </form>
             </div>
             <a href="/" className="button" onClick={postRaidData}>Wyślij</a>

@@ -32,21 +32,10 @@ public class RaidController {
         model.addAttribute("currentFiles", currentRaid.getCurrentFilesIds());
         model.addAttribute("backends", raidManager.getRegisteredDisks());
         model.addAttribute("content", new WriteDataRequest());
-        model.addAttribute("currentRaid", getRaidTypeLabel(raidManager.getCurrentRaidType()));
+        model.addAttribute("currentRaid", raidManager.getCurrentRaidType());
         model.addAttribute("currentFile", currentContent);
         String json = ow.writeValueAsString(model);
         return json;
-    }
-
-    private String getRaidTypeLabel(RaidTypes currentRaidType) {
-        switch (currentRaidType) {
-            case RAID0:
-                return "RAID 0";
-            case RAID1:
-                return "RAID 1";
-            default:
-                return "RAID 3";
-        }
     }
 
     @GetMapping("/disk")
@@ -58,27 +47,18 @@ public class RaidController {
 
     @PostMapping("/text/writing")
     public void saveText(@RequestParam String content) throws Exception {
+        System.out.println(content);
         currentRaid.setDisks(raidManager.getRegisteredDisks());
         currentRaid.writeData(content);
         currentContent = "";
     }
 
     @GetMapping("/text/reading")
-    public String readText(@RequestParam int id, Model model) throws Exception {
+    public String readText(@RequestParam int id) throws Exception {
         currentRaid.setDisks(raidManager.getRegisteredDisks());
         currentContent = currentRaid.readData(id);
         String json = ow.writeValueAsString(currentContent);
         return json;
-    }
-
-    @PostMapping("/raid/type/new")
-    public void changeRaidTypeNew(@RequestParam int type) {
-        currentContent = "";
-        currentRaid = raidManager.get(RaidTypes.values()[type]);
-        for (RegisterDiskRequest registeredbackend : raidManager.getRegisteredDisks()) {
-            String backendIpAddress = "http://" + registeredbackend.getIpAddress() + ":" + registeredbackend.getPort();
-            String url = backendIpAddress + "/backend";
-        }
     }
 
     @PostMapping("/sector/damage")
@@ -98,23 +78,11 @@ public class RaidController {
         currentRaid.setDisks(raidManager.getRegisteredDisks());
     }
 
-    @PostMapping("/data/writing")
-    public void writeData(@RequestBody WriteDataRequest request) throws Exception {
-        currentRaid.setDisks(raidManager.getRegisteredDisks());
-        currentRaid.writeData(request.getData());
-    }
-
-    @GetMapping("/data/reading/{id}")
-    public String writeData(@PathVariable Integer id) throws Exception {
-        currentRaid.setDisks(raidManager.getRegisteredDisks());
-        var content = currentRaid.readData(id);
-        String json = ow.writeValueAsString(content);
-        return json;
-    }
-
     @PostMapping(value = "/raid")
     public void changeRaidType(@RequestParam(name = "type") String type) {
-        currentRaid = raidManager.get(RaidTypes.values()[Integer.parseInt(type)]);
+        System.out.println(type);
+        if(!type.equals(""))
+            currentRaid = raidManager.get(RaidTypes.values()[Integer.parseInt(type)]);
     }
 
     @DeleteMapping("/file/{fileId}")

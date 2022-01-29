@@ -188,10 +188,24 @@ function App(this: any) {
                     </li>
                 </ul>
 
-                <h3>Trwale uszkodzone sektory</h3>
+                <h3>Uszkodzone sektory</h3>
                 <ul>
                     <li>
-                        Identyfikatory sektorów trwale uszkodzonych:
+                        Identyfikatory uszkodzonych sektorów:
+                    </li>
+                </ul>
+
+                <h3>Uszkodzenie wibracyjne</h3>
+                <ul>
+                    <li>
+                        Identyfikatory uszkodzonych sektorów ze względu na wibracje (losowe usunięcie danych):
+                    </li>
+                </ul>
+
+                <h3>Uszkodzenie przez skok napięcia</h3>
+                <ul>
+                    <li>
+                        Identyfikatory uszkodzonych sektorów ze względu na skok napięcia (tymczasowe):
                     </li>
                 </ul>
 

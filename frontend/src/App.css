@@ -62,10 +62,6 @@
   width: 33.33%;
 }
 
-.results p{
-  text-align: center;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -278,10 +274,16 @@ input[type=submit] {
   border-radius: 5px;
 }
 
-.raid1 {
-  margin: 0 auto;
+.raid1{
+  display: block;
+  position: relative;
+  margin: auto;
+  height: 400px;
+  width: 1300px;
+  padding: 20px;
+  font-size: 20px;
 }
 
-.newDisk{
-  padding-top: 50px;
+.textHolder{
+  height: 250px;
 }

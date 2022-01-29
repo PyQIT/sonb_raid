@@ -78,6 +78,7 @@ function App(this: any) {
         raidData = e.target.value;
     }
 
+    // @ts-ignore
     return (
         <div className="App">
 
@@ -151,15 +152,13 @@ function App(this: any) {
             </div>
 
 
-            <div className="Container">
-                <div className="resultsContainer">
-                    <div className="raid1">
-                        <h1>Wynik</h1>
-                        <div className="results">
-                            <form>
-                                <p></p>
-                            </form>
-                        </div>
+            <div className="resultsContainer">
+                <div className="raid1">
+                    <h1>Wynik</h1>
+                    <div className="results">
+                        <form>
+                            <textarea className="textHolder" placeholder="Przesłany tekst będzie tutaj..." ></textarea>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -195,21 +194,86 @@ function App(this: any) {
                         </li>
                     </ul>
 
-                    <h3>Trwale uszkodzone sektory</h3>
-                    <ul>
-                        <li>
-                            Identyfikatory sektorów trwale uszkodzonych:
-                        </li>
-                    </ul>
+                <h3>Uszkodzone sektory</h3>
+                <ul>
+                    <li>
+                        Identyfikatory uszkodzonych sektorów (awaria):
+                    </li>
+                </ul>
+
+                <h3>Uszkodzenie wibracyjne</h3>
+                <ul>
+                    <li>
+                        Identyfikatory uszkodzonych sektorów ze względu na wibracje (losowe usunięcie danych):
+                    </li>
+                </ul>
+
+                <h3>Uszkodzenie przez skok napięcia</h3>
+                <ul>
+                    <li>
+                        Identyfikatory uszkodzonych sektorów ze względu na skok napięcia (tymczasowe):
+                    </li>
+                </ul>
 
                 </div>
                 <div className="radioButtonsContainer">
-                    <form className="dmgForm" action="#" method="post">
-                        <h3>Podaj ID sektora do uszkodzenia:</h3>
-                        <input type="text" id="f-id" name="selector"></input>
-                    </form>
+                    <div className="radioContainer">
+                        <div className="radioButtonsContainer">
+                            <h3>Wybierz typ uszkodzenia</h3>
+
+                            <ul>
+                                <li>
+                                    <input
+                                        type="radio"
+                                        id="f-option"
+                                        name="selector"
+                                        onChange={checkRaid0}
+                                    />
+                                    <label htmlFor="f-option">Awaria sektora</label>
+
+                                    <div className="check"></div>
+
+                                </li>
+
+                                <li>
+                                    <input
+                                        type="radio"
+                                        id="s-option"
+                                        name="selector"
+                                        onChange={checkRaid1}
+                                    />
+                                    <label htmlFor="s-option">Uszkodzenie wibracyjne</label>
+
+                                    <div className="check">
+                                        <div className="inside"></div>
+                                    </div>
+
+                                </li>
+
+                                <li>
+                                    <input
+                                        type="radio"
+                                        id="t-option"
+                                        name="selector"
+                                        onChange={checkRaid2}
+                                    />
+                                    <label htmlFor="t-option">Skok napięcia</label>
+
+                                    <div className="check">
+                                        <div className="inside"></div>
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </div>
+                        <form className="dmgForm" action="#" method="post">
+                            <h3>Podaj ID sektora do uszkodzenia:</h3>
+                            <input type="text" id="f-id" name="selector"></input>
+                        </form>
+                        {"\n"}
+                        <a className="button" onClick={postRaidData}>Wyślij</a>
+                    </div>
                 </div>
-                <a href="/" className="button">Wyślij</a>
             </div>
 
 

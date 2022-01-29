@@ -9,7 +9,26 @@ function App(this: any) {
 
     let [raidData, setRaidData] = useState("");
     let [raidType, setRaidType] = useState("");
+    let [newDisk, setNewDisk] = useState("");
     let [raidReceived, setRaidReceived] = useState("");
+
+
+    const postNewDisk = () => {
+        let ipAddress;
+        Axios.post("/disk/register", {
+                RegisterDiskRequest:   {
+                ipAddress: "dupa",
+                port: "test",
+                numberOfSectors: 10,
+                sizeOfSector: 128,
+                isCheckSumDisk: true
+            } }).then(
+            (response) =>{
+                console.log(response);
+                setRaidType(response.data);
+            }
+        );
+    };
 
     const postRaidData = () => {
         Axios.post("/text/writing", {},{params: {content: raidData}}).then(
@@ -28,6 +47,8 @@ function App(this: any) {
             }
         );
     };
+
+
 
     const getRaidReceived = () => {
         Axios.get("/text/reading").then(
@@ -121,6 +142,10 @@ function App(this: any) {
                             onChange={onChange}>
                         </input>
                     </form>
+                    <div className="newDisk">
+                        <a className="button" onClick={postNewDisk}>Dodaj dysk</a>
+                    </div>
+
                 </div>
                 <a className="button" onClick={postRaidData}>Wyślij</a>
             </div>

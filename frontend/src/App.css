@@ -281,3 +281,7 @@ input[type=submit] {
 .raid1 {
   margin: 0 auto;
 }
+
+.newDisk{
+  padding-top: 50px;
+}

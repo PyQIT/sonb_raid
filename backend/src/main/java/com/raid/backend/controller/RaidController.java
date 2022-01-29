@@ -57,9 +57,9 @@ public class RaidController {
     }
 
     @PostMapping("/text/writing")
-    public void saveText(@ModelAttribute WriteDataRequest content, Model model) throws Exception {
+    public void saveText(@RequestParam String content) throws Exception {
         currentRaid.setDisks(raidManager.getRegisteredDisks());
-        currentRaid.writeData(content.getData());
+        currentRaid.writeData(content);
         currentContent = "";
     }
 
@@ -113,8 +113,8 @@ public class RaidController {
     }
 
     @PostMapping(value = "/raid")
-    public void changeRaidType(@RequestParam(name = "type") int type) {
-        currentRaid = raidManager.get(RaidTypes.values()[type]);
+    public void changeRaidType(@RequestParam(name = "type") String type) {
+        currentRaid = raidManager.get(RaidTypes.values()[Integer.parseInt(type)]);
     }
 
     @DeleteMapping("/file/{fileId}")

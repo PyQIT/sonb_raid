@@ -14,7 +14,6 @@ function App(this: any) {
 
 
     const postNewDisk = () => {
-        let ipAddress;
         Axios.post("/disk/register", {
                 RegisterDiskRequest:   {
                 ipAddress: "dupa",

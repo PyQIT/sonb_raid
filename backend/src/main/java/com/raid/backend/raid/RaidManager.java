@@ -5,26 +5,20 @@ import com.raid.backend.raid.raid1.Raid1;
 import com.raid.backend.raid.raid3.Raid3;
 import com.raid.backend.dataLogic.RegisterDiskRequest;
 import com.raid.backend.dataLogic.UnregisterDiskRequest;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.stereotype.Component;
-
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Component
 public class RaidManager {
 
     private final Raid0 raid0;
     private final Raid1 raid1;
     private final Raid3 raid3;
-
-    @Getter
     private Raid currentRaid;
-
-    @Getter
     private RaidTypes currentRaidType = RaidTypes.RAID0;
-
-    @Getter
     private final Set<RegisterDiskRequest> registeredDisks = new HashSet<>();
 
     public RaidManager(Raid0 raid0, Raid1 raid1, Raid3 raid3) {

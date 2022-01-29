@@ -5,12 +5,9 @@ import com.raid.backend.dataLogic.ReadRequest;
 import com.raid.backend.dataLogic.RegisterDiskRequest;
 import com.raid.backend.dataLogic.WriteRequest;
 import com.raid.backend.utility.ByteUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,7 +25,6 @@ public class Raid1 implements Raid {
     private final RestTemplate client;
     private final Map<Integer, FileDetails> files = new HashMap<>();
     private Integer fileId = 0;
-    private final Logger logger = LoggerFactory.getLogger(Raid1.class.getName());
 
     @Override
     public Set<Integer> getCurrentFilesIds() {
@@ -93,11 +89,7 @@ public class Raid1 implements Raid {
                     }
                     isSaved = true;
                     break;
-                } else {
-                    logger.error("Write attempt error for part " + partId + " with message: " + Objects.requireNonNull(response.getBody()));
-                    logger.error("Write attempt error for part " + partId + " with message: " + Objects.requireNonNull(response.getBody()));
                 }
-
             }
             if (!isSaved) {
                 removeFile(fileId);
@@ -148,7 +140,6 @@ public class Raid1 implements Raid {
                             currentDiskIndex++;
                         }
                     } catch (Exception e) {
-                        logger.error("Cannot read part with id: " + partId + " message - " + e.getMessage());
                         currentDiskIndex++;
                     }
                 } while (currentDiskIndex < part.size());
@@ -192,7 +183,7 @@ public class Raid1 implements Raid {
     }
 
     @Override
-    public void removeFile(Integer id) {
+    public void removeFile(Integer id) throws Exception {
         if (files.containsKey(id)) {
             for (Integer partId : files.get(id).getFileParts().keySet()) {
                 var partDetails = files.get(id).getFileParts().get(partId);
@@ -201,7 +192,7 @@ public class Raid1 implements Raid {
                     try {
                         client.delete(url);
                     } catch (Exception e) {
-                        logger.error("Cannot removed part: " + partId + " - Message " + e.getMessage());
+                        throw new Exception("Cannot removed part: " + partId + " - Message " + e.getMessage());
                     }
                 }
             }

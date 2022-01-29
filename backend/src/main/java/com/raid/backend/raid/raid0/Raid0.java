@@ -5,13 +5,10 @@ import com.raid.backend.dataLogic.ReadRequest;
 import com.raid.backend.dataLogic.RegisterDiskRequest;
 import com.raid.backend.dataLogic.WriteRequest;
 import com.raid.backend.utility.ByteUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -28,7 +25,6 @@ public class Raid0 implements Raid {
                 .build();
     }
 
-    private final Logger logger = LoggerFactory.getLogger(Raid0.class.getName());
     private final RestTemplate client;
     private final Map<Integer, FileDetails> files = new HashMap<>();
     private Integer fileId = 0;
@@ -83,7 +79,7 @@ public class Raid0 implements Raid {
                             isSave = true;
                             break;
                         } else {
-                            logger.error("Write attempt error for part " + partId + " with message: " + Objects.requireNonNull(response.getBody()));
+                            throw new Exception("Write attempt error for part " + partId + " with message: " + Objects.requireNonNull(response.getBody()));
                         }
                     }
                     if (!isSave) {
@@ -185,7 +181,7 @@ public class Raid0 implements Raid {
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 return response.getBody().getData();
             } else {
-                logger.error("Read attempt error for part " + partId + " with message: " + Objects.requireNonNull(response.getBody()));
+                throw new Exception("Read attempt error for part " + partId + " with message: " + Objects.requireNonNull(response.getBody()));
             }
         } catch (Exception e) {
             e.printStackTrace();

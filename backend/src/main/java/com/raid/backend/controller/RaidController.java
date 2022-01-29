@@ -26,7 +26,6 @@ public class RaidController {
     private String currentContent = "";
     ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
-
     @GetMapping()
     public String get(Model model) throws JsonProcessingException {
         model.addAttribute("raid", currentRaid);
@@ -83,7 +82,7 @@ public class RaidController {
     }
 
     @PostMapping("/sector/damage")
-    public void damageSector(@RequestParam int sectorId, @RequestParam Integer damageType, Model model) throws Exception {
+    public void damageSector(@RequestParam int sectorId, @RequestParam Integer damageType) throws Exception {
         currentDisk.damageSector(sectorId, damageType);
     }
 
@@ -102,7 +101,7 @@ public class RaidController {
     @PostMapping("/data/writing")
     public void writeData(@RequestBody WriteDataRequest request) throws Exception {
         currentRaid.setDisks(raidManager.getRegisteredDisks());
-        var fileId = currentRaid.writeData(request.getData());
+        currentRaid.writeData(request.getData());
     }
 
     @GetMapping("/data/reading/{id}")
@@ -119,7 +118,7 @@ public class RaidController {
     }
 
     @DeleteMapping("/file/{fileId}")
-    public void removeFile(@PathVariable(name = "fileId") int fileId) {
+    public void removeFile(@PathVariable(name = "fileId") int fileId) throws Exception {
         currentRaid = raidManager.getCurrentRaid();
         currentRaid.setDisks(raidManager.getRegisteredDisks());
         currentRaid.removeFile(fileId);

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ByteUtils {
-
     public static byte[] trimEnd(byte[] bytes) {
         int i = bytes.length - 1;
         while (i >= 0 && bytes[i] == 0) {

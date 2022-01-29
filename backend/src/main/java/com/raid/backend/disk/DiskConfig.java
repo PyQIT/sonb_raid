@@ -9,18 +9,14 @@ public class DiskConfig {
 
     @Value(value = "128")
     private int numberOfSectors;
-
     @Value(value = "32")
     private int sizeOfSector;
-
     @Bean
     public int getSizeOfSector() {
         return sizeOfSector;
     }
-
     @Bean
     public int getNumberOfSectors() {
         return numberOfSectors;
     }
-
 }

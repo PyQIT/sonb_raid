@@ -5,12 +5,9 @@ import com.raid.backend.dataLogic.ReadRequest;
 import com.raid.backend.dataLogic.RegisterDiskRequest;
 import com.raid.backend.utility.ByteUtils;
 import com.raid.backend.dataLogic.WriteRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -20,7 +17,6 @@ import java.util.stream.Collectors;
 @Component
 public class Raid3 implements Raid {
 
-
     public Raid3() {
         this.client = new RestTemplate();
     }
@@ -29,7 +25,6 @@ public class Raid3 implements Raid {
     private final Map<Integer, FileDetails> files = new HashMap<>();
     private final Map<Integer, List<CheckSumDetails>> fileCheckSumDetailsList = new HashMap<>();
     private Integer fileId = 0;
-    private final Logger logger = LoggerFactory.getLogger(Raid3.class.getName());
 
     @Override
     public Set<Integer> getCurrentFilesIds() {
@@ -93,7 +88,7 @@ public class Raid3 implements Raid {
                             isSaved = true;
                             break;
                         } else {
-                            logger.error("Write attempt error for part " + partId + " with message: " + Objects.requireNonNull(response.getBody()));
+                            throw new Exception("Write attempt error for part " + partId + " with message: " + Objects.requireNonNull(response.getBody()));
                         }
                     }
                     if (!isSaved) {
@@ -142,12 +137,10 @@ public class Raid3 implements Raid {
             registeredDisks.remove(disk);
             var disks = new ArrayList<>(registeredDisks);
             disks.add(disk);
-            logger.info("Sum check disk:" + getIpAddressFromDisk(disks.get(disks.size() - 1)));
             return disks;
         }
         var disks = new ArrayList<>(registeredDisks);
         disks.get(disks.size() - 1).setCheckSumDisk(true);
-        logger.info("Sum check disk:" + getIpAddressFromDisk(disks.get(disks.size() - 1)));
         return disks;
     }
 
@@ -204,7 +197,7 @@ public class Raid3 implements Raid {
 
                 }
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                throw new Exception(e.getMessage());
             }
         }
 
@@ -304,7 +297,7 @@ public class Raid3 implements Raid {
     }
 
     @Override
-    public void removeFile(Integer id) {
+    public void removeFile(Integer id) throws Exception {
         if (fileCheckSumDetailsList.containsKey(id)) {
             for (CheckSumDetails checkSumDetails : fileCheckSumDetailsList.get(id)) {
                 for (FilePartDetails filePartDetails : checkSumDetails.getPartDetailsList()) {
@@ -312,14 +305,14 @@ public class Raid3 implements Raid {
                     try {
                         client.delete(url);
                     } catch (Exception e) {
-                        logger.error(e.getMessage());
+                        throw new Exception(e.getMessage());
                     }
                 }
                 var url = "http://" + checkSumDetails.getCheckSum().getIpAddress() + "/disk/" + checkSumDetails.getCheckSum().getSectorId();
                 try {
                     client.delete(url);
                 } catch (Exception e) {
-                    logger.error(e.getMessage());
+                    throw new Exception(e.getMessage());
                 }
             }
         }

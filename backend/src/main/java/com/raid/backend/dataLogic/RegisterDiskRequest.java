@@ -1,25 +1,17 @@
 package com.raid.backend.dataLogic;
 
 import lombok.*;
-
 import java.util.Objects;
 
-@NoArgsConstructor
-@Getter
+@Data
 @ToString
 @AllArgsConstructor
 public class RegisterDiskRequest {
-
     private String ipAddress;
-
     private String port;
-
     private int numberOfSectors;
-
     private int sizeOfSector;
-
-    @Setter
-    private boolean isCheckSumDisk = false;
+    private boolean isCheckSumDisk;
 
     @Override
     public boolean equals(Object o) {

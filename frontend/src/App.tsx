@@ -25,7 +25,7 @@ function App() {
 
                 <li>
                     <input type="radio" id="s-option" name="selector"></input>
-                        <label htmlFor="s-option">RAID 2</label>
+                        <label htmlFor="s-option">RAID 1</label>
 
                         <div className="check">
                             <div className="inside"></div>
@@ -68,7 +68,7 @@ function App() {
             </div>
 
             <div className="raid2">
-                <h1>RAID 2</h1>
+                <h1>RAID 1</h1>
                 <div className="results">
                     <form>
                         <textarea placeholder="Przesłany tekst będzie tutaj..."></textarea>

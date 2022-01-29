@@ -1,15 +1,11 @@
 package com.raid.backend.raid.raid3;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter
-@Getter
+@Data
 public class CheckSumDetails {
-
     List<FilePartDetails> partDetailsList = new ArrayList<>();
     FilePartDetails checkSum;
 

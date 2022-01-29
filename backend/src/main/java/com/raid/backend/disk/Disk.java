@@ -3,20 +3,14 @@ package com.raid.backend.disk;
 import com.raid.backend.dataLogic.ReadRequest;
 import com.raid.backend.dataLogic.WriteRequest;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Component
 public class Disk {
-
-    private final Logger logger;
-
     private final List<Sector> sectors = new ArrayList<>();
 
     private final int sectorSize;
@@ -26,7 +20,6 @@ public class Disk {
 
 
     public Disk(DiskConfig config) {
-        logger = LoggerFactory.getLogger(Disk.class);
         this.sectorSize = config.getSizeOfSector();
         this.numberOfSectors = config.getNumberOfSectors();
         initSectors();
@@ -43,7 +36,6 @@ public class Disk {
         for (Sector sector : sectors) {
             sector.setData(null);
         }
-        logger.info("Sectors cleared");
     }
 
     public void clearSector(int id) {
@@ -85,7 +77,7 @@ public class Disk {
     public List<Integer> printFreeSectors() {
         List<Sector> freeSectors = new ArrayList<>();
         for (Sector sector : sectors) {
-            if (sector.getData() == null && sector.getDamageType().equals(DamageType.NO_DAMAGE)) {
+            if (sector.getData() == null && sector.getDamageType().equals(DamageType.WITHOUT_DAMAGE)) {
                 freeSectors.add(sector);
             }
         }
@@ -99,7 +91,7 @@ public class Disk {
     public List<Integer> printSectorsInUse() {
         List<Sector> sectorsInUsage = new ArrayList<>();
         for (Sector sector : sectors) {
-            if (sector.getData() != null && sector.getDamageType().equals(DamageType.NO_DAMAGE)) {
+            if (sector.getData() != null && sector.getDamageType().equals(DamageType.WITHOUT_DAMAGE)) {
                 sectorsInUsage.add(sector);
             }
         }
@@ -112,15 +104,19 @@ public class Disk {
 
     public void damageSector(int sectorId, Integer damageType) throws Exception {
         Sector sectorToDamage = findSector(sectorId);
-        if (damageType == DamageType.PERMANENT.ordinal()) {
+        if (damageType == DamageType.SECTOR_MULFUNCTION.ordinal()) {
             sectorToDamage.setData(null);
-            sectorToDamage.setDamageType(DamageType.PERMANENT);
+            sectorToDamage.setDamageType(DamageType.SECTOR_MULFUNCTION);
+        } if (damageType == DamageType.VOLTAGE_SURGE.ordinal()) {
+            sectorToDamage.setDamageType(DamageType.VOLTAGE_SURGE);
+        } if (damageType == DamageType.VIBRATION_DAMAGE.ordinal()) {
+            sectorToDamage.setDamageType(DamageType.VIBRATION_DAMAGE);
         }
     }
 
     public Sector findSector(int sectorId) throws Exception {
         for (Sector sector : sectors) {
-            if (sector.getId() == sectorId && sector.getDamageType().equals(DamageType.NO_DAMAGE)) {
+            if (sector.getId() == sectorId && sector.getDamageType().equals(DamageType.WITHOUT_DAMAGE)) {
                 return sector;
             }
         }
@@ -130,19 +126,26 @@ public class Disk {
     public List<Integer> printPermanentlyDamagedSectors() {
         List<Integer> sectorsPermamentlyDamaged = new ArrayList<>();
         for (Sector sector : sectors) {
-            if (sector.getDamageType().equals(DamageType.PERMANENT)) {
+            if (sector.getDamageType().equals(DamageType.SECTOR_MULFUNCTION)) {
                 sectorsPermamentlyDamaged.add(sector.getId());
             }
         }
         return sectorsPermamentlyDamaged;
     }
 
+    public List<Integer> printTemporaryDamagedSectors() {
+        return sectors.stream().filter(sector -> sector.getDamageType().equals(DamageType.VOLTAGE_SURGE))
+                .map(Sector::getId)
+                .collect(Collectors.toList());
+    }
 
     public ReadRequest writeData(WriteRequest request) throws Exception {
         for (Sector sector : sectors) {
             if ((sector.getData() == null || sector.getData().length == 0)) {
-                if (sector.getDamageType().equals(DamageType.PERMANENT)) {
-                    logger.info("sector permamently damaged");
+                if (sector.getDamageType().equals(DamageType.SECTOR_MULFUNCTION)) {
+                    break;
+                } if (sector.getDamageType().equals(DamageType.VOLTAGE_SURGE)) {
+                    sector.setDamageType(DamageType.WITHOUT_DAMAGE);
                     break;
                 }
                 byte[] data = request.getData();
@@ -150,7 +153,6 @@ public class Disk {
                 byte[] toSave = new byte[sector.getSectorSize()];
                 System.arraycopy(data, 0, toSave, 0, end);
                 sector.setData(toSave);
-                logger.info("Size of data = " + sector.getData().length + " data = " + Arrays.toString(sector.getData()) + " has been saved");
                 return new ReadRequest(sector.getId());
             }
         }
@@ -160,11 +162,13 @@ public class Disk {
     public WriteRequest readData(int id) throws Exception {
         for (Sector sector : sectors) {
             if (sector.getId() == id) {
-                if (sector.getDamageType().equals(DamageType.PERMANENT)) {
+                if (sector.getDamageType().equals(DamageType.SECTOR_MULFUNCTION)) {
+                    break;
+                } if (sector.getDamageType().equals(DamageType.VOLTAGE_SURGE)) {
+                    sector.setDamageType(DamageType.WITHOUT_DAMAGE);
                     break;
                 }
                 if (sector.getData() != null && sector.getData().length > 0) {
-                    logger.info(Arrays.toString(sector.getData()) + " has been read");
                     return new WriteRequest(sector.getData());
                 }
                 throw new Exception("Sector with provided id is empty or damaged");

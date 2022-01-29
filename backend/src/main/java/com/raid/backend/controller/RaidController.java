@@ -71,8 +71,8 @@ public class RaidController {
         return json;
     }
 
-    @PostMapping("/raid/type")
-    public void changeRaidType(@RequestParam int type, Model model) {
+    @PostMapping("/raid/type/new")
+    public void changeRaidTypeNew(@RequestParam int type) {
         currentContent = "";
         currentRaid = raidManager.get(RaidTypes.values()[type]);
         for (RegisterDiskRequest registeredbackend : raidManager.getRegisteredDisks()) {

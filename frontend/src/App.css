@@ -273,3 +273,17 @@ input[type=submit] {
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
+
+.raid1{
+  display: block;
+  position: relative;
+  margin: auto;
+  height: 400px;
+  width: 1300px;
+  padding: 20px;
+  font-size: 20px;
+}
+
+.textHolder{
+  height: 250px;
+}

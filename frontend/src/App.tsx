@@ -24,7 +24,7 @@ function App() {
         Axios.post("/raid").then(
             (response) =>{
                 console.log(response);
-                setRaidType(response.data.type);
+                setRaidType(response.data);
             }
         );
     };
@@ -58,7 +58,7 @@ function App() {
                         type="radio"
                         id="f-option"
                         name="selector"
-                        checked={raidType === 'RAID 0'}
+                        checked={raidType === '0'}
                         onChange={postRaidType}
                         ></input>
                         <label htmlFor="f-option">RAID 0</label>
@@ -72,7 +72,7 @@ function App() {
                         type="radio"
                         id="s-option"
                         name="selector"
-                        checked={raidType === 'RAID 1'}
+                        checked={raidType === '1'}
                         onChange={postRaidType}
                     ></input>
                         <label htmlFor="s-option">RAID 1</label>
@@ -88,7 +88,7 @@ function App() {
                         type="radio"
                         id="t-option"
                         name="selector"
-                        checked={raidType === 'RAID 3'}
+                        checked={raidType === '2'}
                         onChange={postRaidType}
                     ></input>
                         <label htmlFor="t-option">RAID 3</label>
@@ -103,7 +103,7 @@ function App() {
             <div className="radioButtonsContainer">
                 <h2>Wpisz tekst do wyslania</h2>
                 <form>
-                    <textarea placeholder="Wpisz tekst..."></textarea>
+                    <textarea placeholder="Wpisz tekst...">{raidData}</textarea>
                 </form>
             </div>
             <a href="/" className="button" onClick={postRaidData}>Wyślij</a>

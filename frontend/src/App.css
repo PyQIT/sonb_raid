@@ -287,3 +287,8 @@ input[type=submit] {
 .textHolder{
   height: 250px;
 }
+
+.newDisk h2{
+  padding-top:25px;
+  margin-top: 0;
+}

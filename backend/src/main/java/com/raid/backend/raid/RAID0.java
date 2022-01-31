@@ -41,4 +41,12 @@ public class RAID0 {
 
         return returnTexts;
     }
+
+    public int disksNumber(){
+        return 2;
+    }
+
+    public String getRaidType(){
+        return "RAID0";
+    }
 }

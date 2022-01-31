@@ -1,31 +1,26 @@
 package com.raid.backend.disk;
 
-import com.raid.backend.dataLogic.ReadRequest;
-import com.raid.backend.dataLogic.WriteRequest;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
+@Data
 @Component
 public class Disk {
     private final List<Sector> sectors = new ArrayList<>();
-
+    private final int diskId;
     private final int sectorSize;
-
     private final int numberOfSectors;
+    private boolean isCheckSumDisk;
 
+    public Disk(int diskId){
+        this.diskId = diskId;
+        this.sectorSize = 32;
+        this.numberOfSectors = 128;
 
-
-    public Disk(DiskConfig config) {
-        this.sectorSize = config.getSizeOfSector();
-        this.numberOfSectors = config.getNumberOfSectors();
-        initSectors();
-    }
-
-    private void initSectors() {
         for (int i = 0; i < numberOfSectors; i++) {
             Sector sector = new Sector(i, sectorSize);
             sectors.add(sector);
@@ -139,7 +134,7 @@ public class Disk {
                 .collect(Collectors.toList());
     }
 
-    public ReadRequest writeData(WriteRequest request) throws Exception {
+    public int writeData(byte[] writeData) throws Exception {
         for (Sector sector : sectors) {
             if ((sector.getData() == null || sector.getData().length == 0)) {
                 if (sector.getDamageType().equals(DamageType.SECTOR_MULFUNCTION)) {
@@ -148,18 +143,17 @@ public class Disk {
                     sector.setDamageType(DamageType.WITHOUT_DAMAGE);
                     break;
                 }
-                byte[] data = request.getData();
-                int end = Math.min(data.length, sectorSize);
+                int end = Math.min(writeData.length, sectorSize);
                 byte[] toSave = new byte[sector.getSectorSize()];
-                System.arraycopy(data, 0, toSave, 0, end);
+                System.arraycopy(writeData, 0, toSave, 0, end);
                 sector.setData(toSave);
-                return new ReadRequest(sector.getId());
+                return sector.getId();
             }
         }
         throw new Exception("backend is full or some sectors are damaged. Cannot save more data");
     }
 
-    public WriteRequest readData(int id) throws Exception {
+    public byte[] readData(int id) throws Exception {
         for (Sector sector : sectors) {
             if (sector.getId() == id) {
                 if (sector.getDamageType().equals(DamageType.SECTOR_MULFUNCTION)) {
@@ -169,7 +163,7 @@ public class Disk {
                     break;
                 }
                 if (sector.getData() != null && sector.getData().length > 0) {
-                    return new WriteRequest(sector.getData());
+                    return sector.getData();
                 }
                 throw new Exception("Sector with provided id is empty or damaged");
             }

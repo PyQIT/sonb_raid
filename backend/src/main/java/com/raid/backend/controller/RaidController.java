@@ -6,23 +6,22 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.raid.backend.disk.Disk;
 import com.raid.backend.raid.RaidTypes;
 import com.raid.backend.raid.Raid;
-import com.raid.backend.raid.RaidManager;
-import com.raid.backend.dataLogic.*;
+import com.raid.backend.raid.RaidDispatcher;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class RaidController {
 
-    public RaidController(Disk disk, RaidManager raidManager) {
+    public RaidController(Disk disk, RaidDispatcher raidDispatcher) {
         this.currentDisk = disk;
-        this.raidManager = raidManager;
-        this.currentRaid = raidManager.getCurrentRaid();
+        this.raidDispatcher = raidDispatcher;
+        this.currentRaid = raidDispatcher.getCurrentRaid();
     }
 
     private final Disk currentDisk;
     private Raid currentRaid;
-    private final RaidManager raidManager;
+    private final RaidDispatcher raidDispatcher;
     private String currentContent = "";
     ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
@@ -30,9 +29,9 @@ public class RaidController {
     public String get(Model model) throws JsonProcessingException {
         model.addAttribute("raid", currentRaid);
         model.addAttribute("currentFiles", currentRaid.getCurrentFilesIds());
-        model.addAttribute("backends", raidManager.getRegisteredDisks());
-        model.addAttribute("content", new WriteDataRequest());
-        model.addAttribute("currentRaid", raidManager.getCurrentRaidType());
+        model.addAttribute("backends", raidDispatcher.getRegisteredDisks());
+        model.addAttribute("content", new String());
+        model.addAttribute("currentRaid", raidDispatcher.getCurrentRaidType());
         model.addAttribute("currentFile", currentContent);
         String json = ow.writeValueAsString(model);
         return json;
@@ -48,14 +47,14 @@ public class RaidController {
     @PostMapping("/text/writing")
     public void saveText(@RequestParam String content) throws Exception {
         System.out.println(content);
-        currentRaid.setDisks(raidManager.getRegisteredDisks());
+        currentRaid.setDisks(raidDispatcher.getRegisteredDisks());
         currentRaid.writeData(content);
         currentContent = "";
     }
 
     @GetMapping("/text/reading")
     public String readText(@RequestParam int id) throws Exception {
-        currentRaid.setDisks(raidManager.getRegisteredDisks());
+        currentRaid.setDisks(raidDispatcher.getRegisteredDisks());
         currentContent = currentRaid.readData(id);
         String json = ow.writeValueAsString(currentContent);
         return json;
@@ -67,40 +66,40 @@ public class RaidController {
     }
 
     @PostMapping("/disk/register")
-    public void registerDisk(@RequestBody RegisterDiskRequest request) {
-        if (raidManager.addDisk(request))
-            currentRaid.setDisks(raidManager.getRegisteredDisks());
+    public void registerDisk(@RequestBody int id) {
+        if (raidDispatcher.addDisk(id))
+            currentRaid.setDisks(raidDispatcher.getRegisteredDisks());
     }
 
     @PostMapping("/disk/unregister")
-    public void unregisterDisk(@RequestBody UnregisterDiskRequest request) {
-        raidManager.removeDisk(request);
-        currentRaid.setDisks(raidManager.getRegisteredDisks());
+    public void unregisterDisk(@RequestBody int id) {
+        raidDispatcher.removeDisk(id);
+        currentRaid.setDisks(raidDispatcher.getRegisteredDisks());
     }
 
     @PostMapping(value = "/raid")
     public void changeRaidType(@RequestParam(name = "type") String type) {
         System.out.println(type);
         if(!type.equals(""))
-            currentRaid = raidManager.get(RaidTypes.values()[Integer.parseInt(type)]);
+            currentRaid = raidDispatcher.get(RaidTypes.values()[Integer.parseInt(type)]);
     }
 
     @DeleteMapping("/file/{fileId}")
     public void removeFile(@PathVariable(name = "fileId") int fileId) throws Exception {
-        currentRaid = raidManager.getCurrentRaid();
-        currentRaid.setDisks(raidManager.getRegisteredDisks());
+        currentRaid = raidDispatcher.getCurrentRaid();
+        currentRaid.setDisks(raidDispatcher.getRegisteredDisks());
         currentRaid.removeFile(fileId);
     }
 
     @PostMapping(value = "/disk/write")
-    public void writeOnDisk(@RequestBody WriteRequest writeRequest) throws Exception {
-        ReadRequest readRequest = currentDisk.writeData(writeRequest);
+    public void writeOnDisk(@RequestBody byte[] data) throws Exception {
+        currentDisk.writeData(data);
     }
 
     @GetMapping(value = "/disk/read/{id}")
     public String readFromDisk(@PathVariable int id) throws Exception {
-        WriteRequest writeRequest = currentDisk.readData(id);
-        String json = ow.writeValueAsString(writeRequest);
+        byte[] data = currentDisk.readData(id);
+        String json = ow.writeValueAsString(data);
         return json;
     }
 

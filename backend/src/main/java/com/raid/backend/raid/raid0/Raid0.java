@@ -1,14 +1,13 @@
 package com.raid.backend.raid.raid0;
 
+import com.raid.backend.disk.Disk;
+import com.raid.backend.raid.FileDetails;
+import com.raid.backend.raid.FilePartDetails;
 import com.raid.backend.raid.Raid;
-import com.raid.backend.dataLogic.ReadRequest;
-import com.raid.backend.dataLogic.RegisterDiskRequest;
-import com.raid.backend.dataLogic.WriteRequest;
 import com.raid.backend.utility.ByteUtils;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -18,14 +17,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Component
+@NoArgsConstructor
 public class Raid0 implements Raid {
 
-    public Raid0() {
-        this.client = new RestTemplateBuilder()
-                .build();
-    }
 
-    private final RestTemplate client;
     private final Map<Integer, FileDetails> files = new HashMap<>();
     private Integer fileId = 0;
 
@@ -53,7 +48,7 @@ public class Raid0 implements Raid {
     }
 
     private Integer saveData(String data) throws Exception {
-        List<RegisterDiskRequest> disks = new ArrayList<>(registeredDisks);
+        List<Disk> disks = new ArrayList<>(registeredDisks);
         int partId = 0;
         var splitData = splitData(data);
         boolean isEnoughSpace = checkIsEnoughSpace(splitData);
@@ -65,10 +60,8 @@ public class Raid0 implements Raid {
         for (int i = 0; i < max; i++) {
             for (int j = 0; j < splitData.size(); j++) {
                 if (splitData.get(j).size() > i) {
-                    var dataToSave = splitData.get(j).get(i);
-                    RegisterDiskRequest currentDisk = disks.get(j);
-                    String diskIpAddress = currentDisk.getIpAddress() + ":" + currentDisk.getPort();
-                    String url = "http://" + diskIpAddress + "/disk";
+                    byte[] dataToSave = splitData.get(j).get(i);
+                    Disk currentDisk = disks.get(j);
                     WriteRequest writeRequest = new WriteRequest(dataToSave);
                     var isSave = false;
                     for (int k = 0; k < NUMBER_OF_ATTEMPTS; k++) {
@@ -132,6 +125,7 @@ public class Raid0 implements Raid {
             start = end;
             currentDiskIndex = (currentDiskIndex + 1) % registeredDisks.size();
         }
+        System.out.println("koniec");
         return splitedData;
     }
 

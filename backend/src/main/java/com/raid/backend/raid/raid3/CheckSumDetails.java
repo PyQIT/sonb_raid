@@ -1,5 +1,6 @@
 package com.raid.backend.raid.raid3;
 
+import com.raid.backend.raid.FilePartDetails;
 import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;

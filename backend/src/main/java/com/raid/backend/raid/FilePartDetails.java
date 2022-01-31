@@ -1,4 +1,4 @@
-package com.raid.backend.raid.raid0;
+package com.raid.backend.raid;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class FilePartDetails {
+    private Integer partId;
     private Integer sectorId;
-    private String ipAddress;
+    private Integer diskId;
 }

@@ -1,13 +1,13 @@
 package com.raid.backend.raid.raid3;
 
+import com.raid.backend.disk.Disk;
+import com.raid.backend.raid.FileDetails;
+import com.raid.backend.raid.FilePartDetails;
 import com.raid.backend.raid.Raid;
-import com.raid.backend.dataLogic.ReadRequest;
-import com.raid.backend.dataLogic.RegisterDiskRequest;
 import com.raid.backend.utility.ByteUtils;
-import com.raid.backend.dataLogic.WriteRequest;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -15,13 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Component
+@NoArgsConstructor
 public class Raid3 implements Raid {
 
-    public Raid3() {
-        this.client = new RestTemplate();
-    }
-
-    private final RestTemplate client;
     private final Map<Integer, FileDetails> files = new HashMap<>();
     private final Map<Integer, List<CheckSumDetails>> fileCheckSumDetailsList = new HashMap<>();
     private Integer fileId = 0;
@@ -53,7 +49,7 @@ public class Raid3 implements Raid {
         List<List<byte[]>> splitData = splitData(data);
         List<List<byte[]>> splitDataWithCrc = countSumControl(splitData);
 
-        List<RegisterDiskRequest> disks = getDisksWithDiskForCheckSum();
+        List<Disk> disks = getDisksWithDiskForCheckSum();
 
 
         if (!checkIsEnoughSpace(splitData)) {
@@ -110,7 +106,7 @@ public class Raid3 implements Raid {
                 var response = client.postForEntity(url, writeRequest, ReadRequest.class);
                 if (response.getStatusCode() == HttpStatus.OK) {
                     var sectorId = Objects.requireNonNull(response.getBody()).getId();
-                    FilePartDetails partDetails = new FilePartDetails(-1, sectorId, diskIpAddress);
+                    FilePartDetails partDetails = new FilePartDetails(-1, sectorId);
                     checkSumDetails.setCheckSum(partDetails);
                     isSaved = true;
                 } else {
@@ -130,8 +126,8 @@ public class Raid3 implements Raid {
         if (registeredDisks.size() <= 1) throw new Exception("Raid 3 required 2 or more disks");
     }
 
-    private List<RegisterDiskRequest> getDisksWithDiskForCheckSum() {
-        var checkSumDisk = registeredDisks.stream().filter(RegisterDiskRequest::isCheckSumDisk).findFirst();
+    private List<Disk> getDisksWithDiskForCheckSum() {
+        var checkSumDisk = registeredDisks.stream().filter(Disk::isCheckSumDisk).findFirst();
         if (checkSumDisk.isPresent()) {
             var disk = checkSumDisk.get();
             registeredDisks.remove(disk);
@@ -142,10 +138,6 @@ public class Raid3 implements Raid {
         var disks = new ArrayList<>(registeredDisks);
         disks.get(disks.size() - 1).setCheckSumDisk(true);
         return disks;
-    }
-
-    private String getIpAddressFromDisk(RegisterDiskRequest currentDisk) {
-        return currentDisk.getIpAddress() + ":" + currentDisk.getPort();
     }
 
     private List<List<byte[]>> countSumControl(List<List<byte[]>> splitData) {
@@ -187,7 +179,6 @@ public class Raid3 implements Raid {
         Map<Integer, byte[]> content = new ConcurrentHashMap<>();
         for (Integer partId : fileDetails.getFileParts().keySet()) {
             var part = fileDetails.getFileParts().get(partId);
-            String url = "http://" + part.getIpAddress() + "/disk/" + part.getSectorId();
             try {
 
                 var response = client.getForEntity(url, WriteRequest.class);

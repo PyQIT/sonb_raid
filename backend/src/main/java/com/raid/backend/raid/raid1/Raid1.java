@@ -1,13 +1,13 @@
 package com.raid.backend.raid.raid1;
 
+import com.raid.backend.disk.Disk;
+import com.raid.backend.raid.FileDetails;
+import com.raid.backend.raid.FilePartDetails;
 import com.raid.backend.raid.Raid;
-import com.raid.backend.dataLogic.ReadRequest;
-import com.raid.backend.dataLogic.RegisterDiskRequest;
-import com.raid.backend.dataLogic.WriteRequest;
 import com.raid.backend.utility.ByteUtils;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,13 +16,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Component
+@NoArgsConstructor
 public class Raid1 implements Raid {
 
-    public Raid1() {
-        this.client = new RestTemplate();
-    }
-
-    private final RestTemplate client;
     private final Map<Integer, FileDetails> files = new HashMap<>();
     private Integer fileId = 0;
 
@@ -49,7 +45,7 @@ public class Raid1 implements Raid {
     }
 
     private int saveData(String data) throws Exception {
-        List<RegisterDiskRequest> disks = new ArrayList<>(getRegisteredDisks());
+        List<Disk> disks = new ArrayList<>(getRegisteredDisks());
         if (disks.size() % 2 != 0) {
             throw new Exception("Raid 1 require even number of disks");
         }
@@ -61,17 +57,10 @@ public class Raid1 implements Raid {
         }
         int i = 0;
         for (byte[] dataPart : dataToSave) {
-            WriteRequest writeRequest = new WriteRequest(dataPart);
-
-            RegisterDiskRequest disk = disks.get(i);
-            String url = "http://" + disk.getIpAddress() + ":" + disk.getPort();
-
-            RegisterDiskRequest backupDisk = disks.get(i + 1);
-            String backupUrl = "http://" + backupDisk.getIpAddress() + ":" + backupDisk.getPort();
+            Disk disk = disks.get(i);
+            Disk backupDisk = disks.get(i + 1);
             var isSaved = false;
             for (int j = 0; j < NUMBER_OF_ATTEMPTS; j++) {
-                var response = client.postForEntity(url + "/disk", writeRequest, ReadRequest.class);
-                var backupResponse = client.postForEntity(backupUrl + "/disk", writeRequest, ReadRequest.class);
 
                 if (response.getStatusCode() == HttpStatus.OK && backupResponse.getStatusCode() == HttpStatus.OK) {
                     var sectorId = Objects.requireNonNull(response.getBody()).getId();
@@ -102,7 +91,7 @@ public class Raid1 implements Raid {
     }
 
     private List<byte[]> splitData(byte[] data) {
-        int size = getRegisteredDisks().stream().findFirst().get().getSizeOfSector();
+        int size = getRegisteredDisks().stream().findFirst().get().getSectorSize();
         int start = 0;
         List<byte[]> result = new LinkedList<>();
         while (data.length > start) {
@@ -130,9 +119,7 @@ public class Raid1 implements Raid {
                 var part = fileDetails.getFileParts().get(partId);
                 do {
                     FilePartDetails disk = part.get(currentDiskIndex);
-                    String url = disk.getIpAddress() + "/disk/" + disk.getSectorId();
                     try {
-                        var response = client.getForEntity(url, WriteRequest.class);
                         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                             content.put(partId, Objects.requireNonNull(response.getBody()).getData());
                             break;
@@ -165,10 +152,8 @@ public class Raid1 implements Raid {
     private boolean checkIsEnoughSpace(List<byte[]> splitData) {
         boolean isEnoughSpace = true;
         var disks = new ArrayList<>(getRegisteredDisks());
-        for (RegisterDiskRequest disk : disks) {
-            String uri = "http://" + disk.getIpAddress() + ":" + disk.getPort() + "/disk/enough-space?fileSize=" + ByteUtils.countSize(splitData);
+        for (Disk disk : disks) {
             try {
-                var response = client.getForEntity(uri, boolean.class);
                 if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                     isEnoughSpace = isEnoughSpace && response.getBody();
                 } else {
@@ -188,7 +173,6 @@ public class Raid1 implements Raid {
             for (Integer partId : files.get(id).getFileParts().keySet()) {
                 var partDetails = files.get(id).getFileParts().get(partId);
                 for (FilePartDetails part : partDetails) {
-                    var url = "http://" + part.getIpAddress() + "/disk/" + part.getSectorId();
                     try {
                         client.delete(url);
                     } catch (Exception e) {

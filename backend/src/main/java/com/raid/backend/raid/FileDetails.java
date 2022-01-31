@@ -1,4 +1,5 @@
-package com.raid.backend.raid.raid3;
+package com.raid.backend.raid;
+
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -18,7 +18,7 @@ function App(this: any) {
                 RegisterDiskRequest:   {
                 ipAddress: "dupa",
                 port: "test",
-                numberOfSectors: 10,
+                numberOfSectors: 32,
                 sizeOfSector: 128,
                 isCheckSumDisk: true
             } }).then(

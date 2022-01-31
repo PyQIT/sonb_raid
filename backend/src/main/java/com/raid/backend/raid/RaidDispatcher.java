@@ -1,10 +1,9 @@
 package com.raid.backend.raid;
 
+import com.raid.backend.disk.Disk;
 import com.raid.backend.raid.raid0.Raid0;
 import com.raid.backend.raid.raid1.Raid1;
 import com.raid.backend.raid.raid3.Raid3;
-import com.raid.backend.dataLogic.RegisterDiskRequest;
-import com.raid.backend.dataLogic.UnregisterDiskRequest;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 import java.util.HashSet;
@@ -12,16 +11,16 @@ import java.util.Set;
 
 @Data
 @Component
-public class RaidManager {
+public class RaidDispatcher {
 
     private final Raid0 raid0;
     private final Raid1 raid1;
     private final Raid3 raid3;
     private Raid currentRaid;
     private RaidTypes currentRaidType = RaidTypes.RAID0;
-    private final Set<RegisterDiskRequest> registeredDisks = new HashSet<>();
+    private final Set<Disk> registeredDisks = new HashSet<>();
 
-    public RaidManager(Raid0 raid0, Raid1 raid1, Raid3 raid3) {
+    public RaidDispatcher(Raid0 raid0, Raid1 raid1, Raid3 raid3) {
         currentRaid = raid0;
         this.raid0 = raid0;
         this.raid1 = raid1;
@@ -50,16 +49,17 @@ public class RaidManager {
         return currentRaid;
     }
 
-    public void removeDisk(UnregisterDiskRequest request) {
+    public void removeDisk(int diskId) {
         this.registeredDisks.stream()
-                .filter(backend -> backend.getPort().equals(request.getPort()) && backend.getIpAddress().equals(request.getIpAddress()))
+                .filter(disk -> disk.getDiskId() == diskId)
                 .findFirst()
                 .ifPresent(registeredDisks::remove);
         updateDisks();
     }
 
-    public boolean addDisk(RegisterDiskRequest request) {
-        var result = this.registeredDisks.add(request);
+    public boolean addDisk(int diskId) {
+        Disk newDisk = new Disk(diskId);
+        var result = this.registeredDisks.add(newDisk);
         updateDisks();
         return result;
     }

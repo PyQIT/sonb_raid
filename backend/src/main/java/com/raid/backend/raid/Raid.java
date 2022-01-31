@@ -1,6 +1,6 @@
 package com.raid.backend.raid;
 
-import com.raid.backend.dataLogic.RegisterDiskRequest;
+import com.raid.backend.disk.Disk;
 import com.raid.backend.utility.ByteUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,10 +10,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public interface Raid {
-    Set<RegisterDiskRequest> registeredDisks = new HashSet<>();
+    Set<Disk> registeredDisks = new HashSet<>();
     int NUMBER_OF_ATTEMPTS = 2;
 
-    default void setDisks(Set<RegisterDiskRequest> backends) {
+    default void setDisks(Set<Disk> backends) {
         if (!registeredDisks.isEmpty()) {
             registeredDisks.clear();
         }
@@ -31,7 +31,7 @@ public interface Raid {
     void removeFile(Integer id) throws Exception;
     Integer writeData(String data) throws Exception;
     String readData(Integer id) throws Exception;
-    default Set<RegisterDiskRequest> getRegisteredDisks() {
+    default Set<Disk> getRegisteredDisks() {
         return registeredDisks;
     }
     Set<Integer> getCurrentFilesIds();

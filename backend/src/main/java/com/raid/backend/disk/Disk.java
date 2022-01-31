@@ -3,171 +3,165 @@ package com.raid.backend.disk;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.raid.backend.disk.DamageType.*;
 
 @Data
 @Component
 public class Disk {
-    private final List<Sector> sectors = new ArrayList<>();
-    private final int diskId;
-    private final int sectorSize;
-    private final int numberOfSectors;
-    private boolean isCheckSumDisk;
+    private List<Sector> sectors = new ArrayList<>();
+    private int diskId;
+    private int numberOfSectors = 128;
 
-    public Disk(int diskId){
-        this.diskId = diskId;
-        this.sectorSize = 32;
-        this.numberOfSectors = 128;
-
+    public void createSectors(){
         for (int i = 0; i < numberOfSectors; i++) {
-            Sector sector = new Sector(i, sectorSize);
+            Sector sector = new Sector(i, 32);
             sectors.add(sector);
         }
     }
 
-    public void clearSectors() {
-        for (Sector sector : sectors) {
-            sector.setData(null);
-        }
-    }
-
-    public void clearSector(int id) {
-        for (Sector sector : sectors) {
-            if (sector.getId() == id) {
-                sector.setData(null);
+    public boolean deleteText(String text){
+        for(Sector sector: sectors){
+            List<String> tmp = sector.getData();
+            if(tmp.remove(text)){
+                sector.setData(tmp);
+                return true;
             }
         }
+        return false;
     }
 
-    public int getFreeSpaceSize() {
-        int freeSpaceSize = 0;
-        for (Sector sector : sectors) {
-            if (sector.getData() == null) {
-                freeSpaceSize += sector.getSectorSize();
+    public List<String> getTexts(){
+        List<String> returnTexts = new ArrayList<>();
+        for(Sector sector: sectors){
+            for(String s: sector.getData()){
+                returnTexts.add(s);
             }
         }
-        return freeSpaceSize;
+        return returnTexts;
     }
 
-    public int getbackendUsageSize() {
-        int backendUsage = 0;
-        for (Sector sector : sectors) {
-            if (sector.getData() != null) {
-                backendUsage += sector.getSectorSize();
+    public int getTextsNumber(){
+        int returnTextsNumber = 0;
+        for(Sector sector: sectors){
+            for(String s: sector.getData()){
+                returnTextsNumber += 1;
             }
         }
-        return backendUsage;
+        return returnTextsNumber;
     }
 
-    public int getTotalSpaceSize() {
-        return sectorSize * numberOfSectors;
-    }
-
-    public int countPercentUsage() {
-        return (int) ((double) getbackendUsageSize() / (double) getTotalSpaceSize() * 100);
-    }
-
-    public List<Integer> printFreeSectors() {
-        List<Sector> freeSectors = new ArrayList<>();
-        for (Sector sector : sectors) {
-            if (sector.getData() == null && sector.getDamageType().equals(DamageType.WITHOUT_DAMAGE)) {
-                freeSectors.add(sector);
-            }
-        }
-        List<Integer> freeSectorsIds = new ArrayList<>();
-        for (Sector sector : freeSectors) {
-            freeSectorsIds.add(sector.getId());
-        }
-        return freeSectorsIds;
-    }
-
-    public List<Integer> printSectorsInUse() {
-        List<Sector> sectorsInUsage = new ArrayList<>();
-        for (Sector sector : sectors) {
-            if (sector.getData() != null && sector.getDamageType().equals(DamageType.WITHOUT_DAMAGE)) {
-                sectorsInUsage.add(sector);
-            }
-        }
-        List<Integer> sectorsInUsageIds = new ArrayList<>();
-        for (Sector sector : sectorsInUsage) {
-            sectorsInUsageIds.add(sector.getId());
-        }
-        return sectorsInUsageIds;
-    }
-
-    public void damageSector(int sectorId, Integer damageType) throws Exception {
-        Sector sectorToDamage = findSector(sectorId);
-        if (damageType == DamageType.SECTOR_MULFUNCTION.ordinal()) {
-            sectorToDamage.setData(null);
-            sectorToDamage.setDamageType(DamageType.SECTOR_MULFUNCTION);
-        } if (damageType == DamageType.VOLTAGE_SURGE.ordinal()) {
-            sectorToDamage.setDamageType(DamageType.VOLTAGE_SURGE);
-        } if (damageType == DamageType.VIBRATION_DAMAGE.ordinal()) {
-            sectorToDamage.setDamageType(DamageType.VIBRATION_DAMAGE);
-        }
-    }
-
-    public Sector findSector(int sectorId) throws Exception {
-        for (Sector sector : sectors) {
-            if (sector.getId() == sectorId && sector.getDamageType().equals(DamageType.WITHOUT_DAMAGE)) {
-                return sector;
-            }
-        }
-        throw new Exception("Sector with id = " + sectorId + " not exist");
-    }
-
-    public List<Integer> printPermanentlyDamagedSectors() {
-        List<Integer> sectorsPermamentlyDamaged = new ArrayList<>();
-        for (Sector sector : sectors) {
-            if (sector.getDamageType().equals(DamageType.SECTOR_MULFUNCTION)) {
-                sectorsPermamentlyDamaged.add(sector.getId());
-            }
-        }
-        return sectorsPermamentlyDamaged;
-    }
-
-    public List<Integer> printTemporaryDamagedSectors() {
-        return sectors.stream().filter(sector -> sector.getDamageType().equals(DamageType.VOLTAGE_SURGE))
-                .map(Sector::getId)
-                .collect(Collectors.toList());
-    }
-
-    public int writeData(byte[] writeData) throws Exception {
-        for (Sector sector : sectors) {
-            if ((sector.getData() == null || sector.getData().length == 0)) {
-                if (sector.getDamageType().equals(DamageType.SECTOR_MULFUNCTION)) {
-                    break;
-                } if (sector.getDamageType().equals(DamageType.VOLTAGE_SURGE)) {
-                    sector.setDamageType(DamageType.WITHOUT_DAMAGE);
+    public void saveText(String text){
+        for(Sector sector: sectors){
+            for(String s: sector.getData()){
+                byte[] tmp = s.getBytes(StandardCharsets.UTF_8);
+                byte[] tmpInput = text.getBytes(StandardCharsets.UTF_8);
+                if((sector.getSectorSize() - tmp.length) < tmpInput.length){
+                    continue;
+                } else{
+                    List<String> tmpNew = sector.getData();
+                    tmpNew.add(text);
+                    sector.setData(tmpNew);
                     break;
                 }
-                int end = Math.min(writeData.length, sectorSize);
-                byte[] toSave = new byte[sector.getSectorSize()];
-                System.arraycopy(writeData, 0, toSave, 0, end);
-                sector.setData(toSave);
-                return sector.getId();
             }
         }
-        throw new Exception("backend is full or some sectors are damaged. Cannot save more data");
     }
 
-    public byte[] readData(int id) throws Exception {
-        for (Sector sector : sectors) {
-            if (sector.getId() == id) {
-                if (sector.getDamageType().equals(DamageType.SECTOR_MULFUNCTION)) {
-                    break;
-                } if (sector.getDamageType().equals(DamageType.VOLTAGE_SURGE)) {
-                    sector.setDamageType(DamageType.WITHOUT_DAMAGE);
-                    break;
-                }
-                if (sector.getData() != null && sector.getData().length > 0) {
-                    return sector.getData();
-                }
-                throw new Exception("Sector with provided id is empty or damaged");
+    public List<Integer> freeSectors(){
+        List<Integer> returnSectorId = new ArrayList<Integer>();
+        for(Sector sector: sectors){
+            if(sector.getData().isEmpty()){
+               returnSectorId.add(sector.getId());
             }
         }
-        throw new Exception("Sector with id = " + id + " can't be read");
+
+        return returnSectorId;
     }
+
+    public List<Integer> occupiedSectors(){
+        List<Integer> returnSectorId = new ArrayList<Integer>();
+        for(Sector sector: sectors){
+            if(!sector.getData().isEmpty()){
+                returnSectorId.add(sector.getId());
+            }
+        }
+        return returnSectorId;
+    }
+
+    public List<Integer> damagedSectors(){
+        List<Integer> returnSectorId = new ArrayList<Integer>();
+        for(Sector sector: sectors){
+            if(!sector.getDamageType().equals(SECTOR_MULFUNCTION)){
+                returnSectorId.add(sector.getId());
+            }
+        }
+        return returnSectorId;
+    }
+
+    public List<Integer> damagedSectorsWibrations(){
+        List<Integer> returnSectorId = new ArrayList<Integer>();
+        for(Sector sector: sectors){
+            if(sector.getDamageType().equals(VIBRATION_DAMAGE)){
+                returnSectorId.add(sector.getId());
+            }
+        }
+        return returnSectorId;
+    }
+
+    public List<Integer> damagedSectorsVoltageSurge(){
+        List<Integer> returnSectorId = new ArrayList<Integer>();
+        for(Sector sector: sectors){
+            if(sector.getDamageType().equals(VOLTAGE_SURGE)){
+                returnSectorId.add(sector.getId());
+            }
+        }
+        return returnSectorId;
+    }
+
+    public int diskSize(){
+        int diskSizeTotal = 0;
+        for(Sector sector: sectors){
+            diskSizeTotal = diskSizeTotal + sector.getSectorSize();
+        }
+        return diskSizeTotal;
+    }
+
+    public int diskSizeFree(){
+        int diskSizeFree = 0;
+        for(Sector sector: sectors){
+            int tmpSectorSize = 0;
+            if(sector.getData().isEmpty()){
+                diskSizeFree = diskSizeFree + sector.getSectorSize();
+            }else{
+                for(String s: sector.getData()){
+                    byte[] tmp = s.getBytes(StandardCharsets.UTF_8);
+                    tmpSectorSize = tmpSectorSize + tmp.length;
+                }
+                diskSizeFree = diskSizeFree + (sector.getSectorSize() - tmpSectorSize);
+            }
+        }
+        return diskSizeFree;
+    }
+
+    public int diskUsage(){
+        int diskUsageSize = 0;
+        for(Sector sector: sectors){
+            if(!sector.getData().isEmpty()){
+                for(String s: sector.getData()){
+                    byte[] tmp = s.getBytes(StandardCharsets.UTF_8);
+                    diskUsageSize = diskUsageSize + tmp.length;
+                }
+            }
+        }
+        return diskUsageSize;
+    }
+
+    public int diskUsagePercent(){
+        return (diskUsage()/diskSize())/100;
+    }
+
 }

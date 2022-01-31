@@ -11,6 +11,9 @@ function App(this: any) {
     let [raidType, setRaidType] = useState("");
     let [newDisk, setNewDisk] = useState("");
     let [raidReceived, setRaidReceived] = useState("");
+    let [diskSpace, setDiskSpace] = useState("");
+    let [diskByIdRead, setDiskByIdRead] = useState("");
+    let [diskDelete, setDiskDelete] = useState("");
 
 
     const postNewDisk = () => {
@@ -24,7 +27,7 @@ function App(this: any) {
             } }).then(
             (response) =>{
                 console.log(response);
-                setRaidType(response.data);
+                setNewDisk(response.data);
             }
         );
     };
@@ -47,13 +50,38 @@ function App(this: any) {
         );
     };
 
-
-
     const getRaidReceived = () => {
         Axios.get("/text/reading").then(
             (response) => {
                 console.log(response);
                 setRaidReceived(response.data);
+            }
+        );
+    }
+
+    const getDiskSpace = () => {
+        Axios.get("/disk/space").then(
+            (response) => {
+                console.log(response);
+                setDiskSpace(response.data);
+            }
+        );
+    }
+
+    const getDiskByIdRead = () => {
+        Axios.get("/disk/read/{id}").then(
+            (response) => {
+                console.log(response);
+                setDiskByIdRead(response.data);
+            }
+        );
+    }
+
+    const deleteDisk = () => {
+        Axios.delete("/disk/{id}").then(
+            (response) => {
+                console.log(response);
+                setDiskDelete(response.data);
             }
         );
     }
@@ -77,6 +105,7 @@ function App(this: any) {
         raidData = e.target.value;
     }
 
+
     // @ts-ignore
     return (
         <div className="App">
@@ -86,6 +115,14 @@ function App(this: any) {
             </header>
 
             <div className="radioContainer">
+
+
+                <div className="newDisk">
+                    <h2>Dodaj dysk</h2>
+                    <p>Ilość dysków:</p>
+                    <a className="button" onClick={postNewDisk}>Dodaj dysk</a>
+                </div>
+
                 <div className="radioButtonsContainer">
                     <h2>Wybierz RAID</h2>
 
@@ -142,10 +179,6 @@ function App(this: any) {
                             onChange={onChange}>
                         </input>
                     </form>
-                    <div className="newDisk">
-                        <a className="button" onClick={postNewDisk}>Dodaj dysk</a>
-                    </div>
-
                 </div>
                 <a className="button" onClick={postRaidData}>Wyślij</a>
             </div>
@@ -156,8 +189,9 @@ function App(this: any) {
                     <h1>Wynik</h1>
                     <div className="results">
                         <form>
-                            <textarea className="textHolder" placeholder="Przesłany tekst będzie tutaj..." ></textarea>
+                            <p></p>
                         </form>
+                        <a className="button" onClick={getRaidReceived}>Odbierz</a>
                     </div>
                 </div>
             </div>
@@ -170,6 +204,7 @@ function App(this: any) {
                     <ul>
                         <li>
                             Wielkość dysku:
+                            {getDiskSpace}
                         </li>
                         <li>
                             Wolne miejsce:

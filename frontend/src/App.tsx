@@ -116,13 +116,6 @@ function App(this: any) {
 
             <div className="radioContainer">
 
-
-                <div className="newDisk">
-                    <h2>Dodaj dysk</h2>
-                    <p>Ilość dysków:</p>
-                    <a className="button" onClick={postNewDisk}>Dodaj dysk</a>
-                </div>
-
                 <div className="radioButtonsContainer">
                     <h2>Wybierz RAID</h2>
 

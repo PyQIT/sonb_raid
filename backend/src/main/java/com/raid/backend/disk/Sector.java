@@ -13,6 +13,7 @@ public class Sector {
     private int sectorSize;
     private DamageType damageType;
     private List<String> data;
+    private List<List<byte[]>> checkSum;
 
     public Sector(int id, int sectorSize) {
         this.id = id;

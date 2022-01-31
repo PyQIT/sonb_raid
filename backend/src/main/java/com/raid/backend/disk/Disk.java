@@ -5,8 +5,11 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static com.raid.backend.disk.BinaryConverter.convertStringToBinary;
 import static com.raid.backend.disk.DamageType.*;
 
 @Data
@@ -37,8 +40,15 @@ public class Disk {
     public List<String> getTexts(){
         List<String> returnTexts = new ArrayList<>();
         for(Sector sector: sectors){
-            for(String s: sector.getData()){
-                returnTexts.add(s);
+            if(sector.getDamageType().equals(WITHOUT_DAMAGE)) {
+                for (String s : sector.getData()) {
+                    returnTexts.add(s);
+                }
+            }
+            if(sector.getDamageType().equals(VOLTAGE_SURGE)) {
+                sector.setDamageType(WITHOUT_DAMAGE);
+            }else if(sector.getDamageType().equals(VIBRATION_DAMAGE)) {
+                sector.setDamageType(WITHOUT_DAMAGE);
             }
         }
         return returnTexts;
@@ -47,8 +57,10 @@ public class Disk {
     public int getTextsNumber(){
         int returnTextsNumber = 0;
         for(Sector sector: sectors){
-            for(String s: sector.getData()){
-                returnTextsNumber += 1;
+            if(sector.getDamageType().equals(WITHOUT_DAMAGE)) {
+                for (String s : sector.getData()) {
+                    returnTextsNumber += 1;
+                }
             }
         }
         return returnTextsNumber;
@@ -65,9 +77,21 @@ public class Disk {
                     List<String> tmpNew = sector.getData();
                     tmpNew.add(text);
                     sector.setData(tmpNew);
+                    System.out.println(text + " = " + convertStringToBinary(text) + " = " +
+                            Arrays.stream(convertStringToBinary(text).split(" "))
+                            .map(binary -> Integer.parseInt(binary, 2))
+                            .map(Character::toString)
+                            .collect(Collectors.joining()));
                     break;
                 }
             }
+        }
+    }
+
+    public void saveChecksum(List<List<byte[]>> checkSum){
+        for(Sector sector: sectors){
+            if(sector.getCheckSum().isEmpty())
+                sector.setCheckSum(checkSum);
         }
     }
 
@@ -164,4 +188,28 @@ public class Disk {
         return (diskUsage()/diskSize())/100;
     }
 
+    public void setSectorMulfunction(int id){
+        for(Sector sector: sectors){
+            if(sector.getId() == id)
+                sector.setDamageType(SECTOR_MULFUNCTION);
+        }
+    }
+
+    public void setVibrationDamage(int id){
+        for(Sector sector: sectors){
+            if(sector.getId() == id) {
+                sector.setDamageType(VIBRATION_DAMAGE);
+                List<String> tmp = sector.getData();
+                tmp.clear();
+                sector.setData(tmp);
+            }
+        }
+    }
+
+    public void setVoltageSurge(int id){
+        for(Sector sector: sectors){
+            if(sector.getId() == id)
+                sector.setDamageType(VOLTAGE_SURGE);
+        }
+    }
 }

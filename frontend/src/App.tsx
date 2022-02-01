@@ -51,7 +51,7 @@ function App(this: any) {
     };
 
     const getRaidReceived = () => {
-        Axios.get("/text/reading").then(
+        Axios.get("/raid0/").then(
             (response) => {
                 console.log(response);
                 setRaidReceived(response.data);
@@ -252,7 +252,7 @@ function App(this: any) {
                     <h1>Wynik</h1>
                     <div className="results">
                         <form>
-                            <p></p>
+                            <p>{raidReceived}</p>
                         </form>
                         <a className="button" onClick={getRaidReceived}>Odbierz</a>
                     </div>

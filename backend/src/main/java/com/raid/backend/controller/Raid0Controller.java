@@ -4,7 +4,6 @@ import com.raid.backend.raid.RAID0;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
@@ -27,7 +26,7 @@ public class Raid0Controller {
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.OK)
     public void saveData(@RequestBody String data) {
-        raid0.saveData(data);
+        raid0.saveData(data.substring(0,data.length() - 1));
     }
 
     @DeleteMapping("/delete")

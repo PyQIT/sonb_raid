@@ -1,6 +1,7 @@
 package com.raid.backend.raid;
 
 import com.raid.backend.disk.Disk;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -22,16 +23,19 @@ public class RAID1 {
         diskSecond.createSectors();
     }
 
+    @Async
     public void saveData(String data){
         diskSecond.saveText(data);
         diskOne.saveText(data);
     }
 
+    @Async
     public void deleteData(String data){
         diskOne.deleteText(data);
         diskSecond.deleteText(data);
     }
 
+    @Async
     public List<String> getData(){
         List<String> returnTexts = new ArrayList<>();
         returnTexts.addAll(diskOne.getTexts());
@@ -39,14 +43,17 @@ public class RAID1 {
         return returnTexts;
     }
 
+    @Async
     public int disksNumber(){
         return 2;
     }
 
+    @Async
     public String getRaidType(){
         return "RAID1";
     }
 
+    @Async
     public void setSectorMulfunction(int sectorId, int diskId) {
         if(diskId == 1){
             diskOne.setSectorMulfunction(sectorId);
@@ -55,6 +62,7 @@ public class RAID1 {
         }
     }
 
+    @Async
     public void setVibrationDamage(int sectorId, int diskId){
         if(diskId == 1){
             diskOne.setVibrationDamage(sectorId);
@@ -63,6 +71,7 @@ public class RAID1 {
         }
     }
 
+    @Async
     public void setVoltageSurge(int sectorId, int diskId){
         if(diskId == 1){
             diskOne.setVoltageSurge(sectorId);
@@ -71,6 +80,7 @@ public class RAID1 {
         }
     }
 
+    @Async
     public List<Integer> freeSectors(int diskId){
         if(diskId == 1){
             return diskOne.freeSectors();
@@ -80,6 +90,7 @@ public class RAID1 {
         return null;
     }
 
+    @Async
     public List<Integer> occupiedSectors(int diskId){
         if(diskId == 1){
             return diskOne.occupiedSectors();
@@ -89,6 +100,7 @@ public class RAID1 {
         return null;
     }
 
+    @Async
     public List<Integer> damagedSectors(int diskId){
         if(diskId == 1){
             return diskOne.damagedSectors();
@@ -98,6 +110,7 @@ public class RAID1 {
         return null;
     }
 
+    @Async
     public List<Integer> damagedSectorsWibrations(int diskId){
         if(diskId == 1){
             return diskOne.damagedSectorsWibrations();
@@ -107,6 +120,7 @@ public class RAID1 {
         return null;
     }
 
+    @Async
     public List<Integer> damagedSectorsVoltageSurge(int diskId){
         if(diskId == 1){
             return diskOne.damagedSectorsVoltageSurge();
@@ -116,6 +130,7 @@ public class RAID1 {
         return null;
     }
 
+    @Async
     public int diskSize(int diskId){
         if(diskId == 1){
             return diskOne.diskSize();
@@ -125,6 +140,7 @@ public class RAID1 {
         return 0;
     }
 
+    @Async
     public int diskSizeFree(int diskId){
         if(diskId == 1){
             return diskOne.diskSizeFree();
@@ -134,6 +150,7 @@ public class RAID1 {
         return 0;
     }
 
+    @Async
     public int diskUsage(int diskId){
         if(diskId == 1){
             return diskOne.diskUsage();
@@ -143,6 +160,7 @@ public class RAID1 {
         return 0;
     }
 
+    @Async
     public int diskUsagePercent(int diskId){
         if(diskId == 1){
             return diskOne.diskUsagePercent();

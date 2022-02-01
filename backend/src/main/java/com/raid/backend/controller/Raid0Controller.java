@@ -95,28 +95,28 @@ public class Raid0Controller {
         return raid0.damagedSectorsVoltageSurge(diskId);
     }
 
-    @GetMapping("/disksize/{diskId}")
+    @GetMapping("/disksize")
     @ResponseStatus(HttpStatus.OK)
-    public int getDiskSize(@PathVariable int diskId) {
-        return raid0.diskSize(diskId);
+    public int getDiskSize() {
+        return raid0.diskSize();
     }
 
-    @GetMapping("/disksizefree/{diskId}")
+    @GetMapping("/disksizefree")
     @ResponseStatus(HttpStatus.OK)
-    public int getDiskSizeFree(@PathVariable int diskId) {
-        return raid0.diskSizeFree(diskId);
+    public int getDiskSizeFree() {
+        return raid0.diskSizeFree();
     }
 
-    @GetMapping("/diskusage/{diskId}")
+    @GetMapping("/diskusage")
     @ResponseStatus(HttpStatus.OK)
-    public int getDiskUsage(@PathVariable int diskId) {
-        return raid0.diskUsage(diskId);
+    public int getDiskUsage() {
+        return raid0.diskUsage();
     }
 
-    @GetMapping("/diskusagepercent/{diskId}")
+    @GetMapping("/diskusagepercent")
     @ResponseStatus(HttpStatus.OK)
-    public int getDiskUsagePercent(@PathVariable int diskId) {
-        return raid0.diskUsagePercent(diskId);
+    public int getDiskUsagePercent() {
+        return raid0.diskUsagePercent();
     }
 
 }

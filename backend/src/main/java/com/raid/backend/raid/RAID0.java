@@ -135,42 +135,22 @@ public class RAID0 {
     }
 
     @Async
-    public int diskSize(int diskId){
-        if(diskId == 1){
-            return diskOne.diskSize();
-        }else if(diskId == 2){
-            return diskSecond.diskSize();
-        }
-        return 0;
+    public int diskSize(){
+        return diskOne.diskSize() + diskSecond.diskSize();
     }
 
     @Async
-    public int diskSizeFree(int diskId){
-        if(diskId == 1){
-            return diskOne.diskSizeFree();
-        }else if(diskId == 2){
-            return diskSecond.diskSizeFree();
-        }
-        return 0;
+    public int diskSizeFree(){
+        return diskOne.diskSizeFree() + diskSecond.diskSizeFree();
     }
 
     @Async
-    public int diskUsage(int diskId){
-        if(diskId == 1){
-           return diskOne.diskUsage();
-        }else if(diskId == 2){
-           return diskSecond.diskUsage();
-        }
-        return 0;
+    public int diskUsage(){
+        return diskOne.diskUsage() + diskSecond.diskUsage();
     }
 
     @Async
-    public int diskUsagePercent(int diskId){
-        if(diskId == 1){
-            return diskOne.diskUsagePercent();
-        }else if(diskId == 2){
-            return diskSecond.diskUsagePercent();
-        }
-        return 0;
+    public int diskUsagePercent(){
+        return diskOne.diskUsagePercent() + diskSecond.diskUsagePercent();
     }
 }

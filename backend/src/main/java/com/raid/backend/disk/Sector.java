@@ -12,13 +12,15 @@ public class Sector {
 
     private int id;
     private int sectorSize;
+    private int sectorOccupiedSize;
     private DamageType damageType;
     private List<String> data;
     private List<List<byte[]>> checkSum;
 
-    public Sector(int id, int sectorSize) {
+    public Sector(int id, int sectorSize, int sectorOccupiedSize) {
         this.id = id;
         this.sectorSize = sectorSize;
+        this.sectorOccupiedSize = sectorOccupiedSize;
         damageType = DamageType.WITHOUT_DAMAGE;
         data = new ArrayList<>();
         checkSum = new ArrayList<>();

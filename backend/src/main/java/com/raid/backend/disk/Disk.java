@@ -5,9 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.raid.backend.disk.BinaryConverter.convertStringToBinary;
 import static com.raid.backend.disk.DamageType.*;
@@ -21,7 +19,7 @@ public class Disk {
 
     public void createSectors(){
         for (int i = 0; i < numberOfSectors; i++) {
-            Sector sector = new Sector(i, 32);
+            Sector sector = new Sector(i, 32, 0);
             sectors.add(sector);
         }
     }
@@ -57,11 +55,9 @@ public class Disk {
     public int getTextsNumber(){
         int returnTextsNumber = 0;
         for(Sector sector: sectors){
-            if(sector.getDamageType().equals(WITHOUT_DAMAGE)) {
-                if(!sector.getData().isEmpty()) {
-                    for (String s : sector.getData()) {
-                        returnTextsNumber += 1;
-                    }
+            if(!sector.getData().isEmpty()) {
+                for (String s : sector.getData()) {
+                    returnTextsNumber += 1;
                 }
             }
         }
@@ -70,30 +66,24 @@ public class Disk {
 
     public void saveText(String text){
         for(Sector sector: sectors){
-            boolean isAdded = false;
-            if(!sector.getData().isEmpty()) {
-                for (String s : sector.getData()) {
-                    byte[] tmp = s.getBytes(StandardCharsets.UTF_8);
-                    byte[] tmpInput = text.getBytes(StandardCharsets.UTF_8);
-                    if ((sector.getSectorSize() - tmp.length) < tmpInput.length) {
-                        continue;
-                    } else {
-                        List<String> tmpNew = sector.getData();
-                        tmpNew.add(text);
-                        sector.setData(tmpNew);
-                        isAdded = true;
-                        System.out.println("* " + sector.getId() + " " + text + " = " + convertStringToBinary(text));
-                        break;
-                    }
-                }
-                if(isAdded)
+            byte[] tmpInput = text.getBytes(StandardCharsets.UTF_8);
+            System.out.println(sector.getSectorSize() + " " + sector.getSectorOccupiedSize() + " " + tmpInput.length);
+            if(sector.getSectorSize() > (sector.getSectorOccupiedSize() + tmpInput.length)){
+                if(!sector.getData().isEmpty()) {
+                    List<String> tmp = sector.getData();
+                    tmp.add(text);
+                    sector.setData(tmp);
+                    sector.setSectorOccupiedSize(sector.getSectorOccupiedSize() + tmpInput.length);
+                    System.out.println("Sector: " + sector.getId() + " " + text + " = " + convertStringToBinary(text));
                     break;
-            } else{
-                List<String> tmp = new ArrayList<>();
-                tmp.add(text);
-                sector.setData(tmp);
-                System.out.println("- " + sector.getId() + " " + text + " = " + convertStringToBinary(text));
-                break;
+                }else{
+                    List<String> tmp = new ArrayList<>();
+                    tmp.add(text);
+                    sector.setData(tmp);
+                    sector.setSectorOccupiedSize(sector.getSectorOccupiedSize() + tmpInput.length);
+                    System.out.println("Sector: " + sector.getId() + " " + text + " = " + convertStringToBinary(text));
+                    break;
+                }
             }
         }
     }

@@ -74,9 +74,7 @@ public class Disk {
             if(!sector.getData().isEmpty()) {
                 for (String s : sector.getData()) {
                     byte[] tmp = s.getBytes(StandardCharsets.UTF_8);
-                    System.out.println(tmp.length);
                     byte[] tmpInput = text.getBytes(StandardCharsets.UTF_8);
-                    System.out.println(tmpInput.length);
                     if ((sector.getSectorSize() - tmp.length) < tmpInput.length) {
                         continue;
                     } else {
@@ -84,7 +82,7 @@ public class Disk {
                         tmpNew.add(text);
                         sector.setData(tmpNew);
                         isAdded = true;
-                        System.out.println(text + " = " + convertStringToBinary(text));
+                        System.out.println("* " + sector.getId() + " " + text + " = " + convertStringToBinary(text));
                         break;
                     }
                 }
@@ -94,7 +92,7 @@ public class Disk {
                 List<String> tmp = new ArrayList<>();
                 tmp.add(text);
                 sector.setData(tmp);
-                System.out.println(text + " = " + convertStringToBinary(text));
+                System.out.println("- " + sector.getId() + " " + text + " = " + convertStringToBinary(text));
                 break;
             }
         }

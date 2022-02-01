@@ -70,6 +70,7 @@ public class Disk {
 
     public void saveText(String text){
         for(Sector sector: sectors){
+            boolean isAdded = false;
             if(!sector.getData().isEmpty()) {
                 for (String s : sector.getData()) {
                     byte[] tmp = s.getBytes(StandardCharsets.UTF_8);
@@ -82,10 +83,13 @@ public class Disk {
                         List<String> tmpNew = sector.getData();
                         tmpNew.add(text);
                         sector.setData(tmpNew);
+                        isAdded = true;
                         System.out.println(text + " = " + convertStringToBinary(text));
                         break;
                     }
                 }
+                if(isAdded)
+                    break;
             } else{
                 List<String> tmp = new ArrayList<>();
                 tmp.add(text);

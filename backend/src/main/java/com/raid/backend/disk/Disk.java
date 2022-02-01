@@ -69,7 +69,7 @@ public class Disk {
         for(Sector sector: sectors){
             byte[] tmpInput = text.getBytes(StandardCharsets.UTF_8);
             //System.out.println(sector.getSectorSize() + " " + sector.getSectorOccupiedSize() + " " + tmpInput.length);
-            if(sector.getSectorSize() > (sector.getSectorOccupiedSize() + tmpInput.length)){
+            if(sector.getSectorSize() > (sector.getSectorOccupiedSize() + tmpInput.length) && (!sector.getDamageType().equals(SECTOR_MULFUNCTION))){
                 if(!sector.getData().isEmpty()) {
                     List<String> tmp = sector.getData();
                     tmp.add(text);

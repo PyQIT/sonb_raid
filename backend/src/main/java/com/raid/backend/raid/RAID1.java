@@ -47,12 +47,10 @@ public class RAID1 {
         }
     }
 
-    @Async
     public int disksNumber(){
         return 2;
     }
 
-    @Async
     public String getRaidType(){
         return "RAID1";
     }

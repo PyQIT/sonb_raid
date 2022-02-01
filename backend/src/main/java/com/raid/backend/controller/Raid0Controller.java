@@ -52,7 +52,7 @@ public class Raid0Controller {
     public void setSectorMulfunction(@RequestBody String data) {
         String[] result = data.split(",");
         int sectorId = Integer.parseInt(result[0]);
-        int diskId = Integer.parseInt(result[1]);
+        int diskId = Integer.parseInt(result[1].substring(0,data.length() - 1));
         raid0.setSectorMulfunction(sectorId,diskId);
     }
 
@@ -61,7 +61,7 @@ public class Raid0Controller {
     public void setVibrationDamage(@RequestBody String data) {
         String[] result = data.split(",");
         int sectorId = Integer.parseInt(result[0]);
-        int diskId = Integer.parseInt(result[1]);
+        int diskId = Integer.parseInt(result[1].substring(0,data.length() - 1));
         raid0.setVibrationDamage(sectorId,diskId);
     }
 
@@ -70,42 +70,42 @@ public class Raid0Controller {
     public void setVoltageSurge(@RequestBody String data) {
         String[] result = data.split(",");
         int sectorId = Integer.parseInt(result[0]);
-        int diskId = Integer.parseInt(result[1]);
+        int diskId = Integer.parseInt(result[1].substring(0,data.length() - 1));
         raid0.setVoltageSurge(sectorId,diskId);
     }
 
     @GetMapping("/freesectors")
     @ResponseStatus(HttpStatus.OK)
     public List<Integer> getFreeSectors(@RequestBody String data) {
-        int diskId = Integer.parseInt(data);
+        int diskId = Integer.parseInt(data.substring(0,data.length() - 1));
         return raid0.freeSectors(diskId);
     }
 
     @GetMapping("/occupiedsectors")
     @ResponseStatus(HttpStatus.OK)
     public List<Integer> getOccupiedSectors(@RequestBody String data) {
-        int diskId = Integer.parseInt(data);
+        int diskId = Integer.parseInt(data.substring(0,data.length() - 1));
         return raid0.occupiedSectors(diskId);
     }
 
     @GetMapping("/damagedsectors")
     @ResponseStatus(HttpStatus.OK)
     public List<Integer> getDamagedSectors(@RequestBody String data) {
-        int diskId = Integer.parseInt(data);
+        int diskId = Integer.parseInt(data.substring(0,data.length() - 1));
         return raid0.damagedSectors(diskId);
     }
 
     @GetMapping("/damagedsectorswibrations")
     @ResponseStatus(HttpStatus.OK)
     public List<Integer> getDamagedSectorsWibrations(@RequestBody String data) {
-        int diskId = Integer.parseInt(data);
+        int diskId = Integer.parseInt(data.substring(0,data.length() - 1));
         return raid0.damagedSectorsWibrations(diskId);
     }
 
     @GetMapping("/damagedsectorsvoltagesurge")
     @ResponseStatus(HttpStatus.OK)
     public List<Integer> getDamagedSectorsVoltageSurge(@RequestBody String data) {
-        int diskId = Integer.parseInt(data);
+        int diskId = Integer.parseInt(data.substring(0,data.length() - 1));
         return raid0.damagedSectorsVoltageSurge(diskId);
     }
 

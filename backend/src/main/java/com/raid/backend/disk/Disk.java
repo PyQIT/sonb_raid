@@ -70,22 +70,28 @@ public class Disk {
 
     public void saveText(String text){
         for(Sector sector: sectors){
-            for(String s: sector.getData()){
-                byte[] tmp = s.getBytes(StandardCharsets.UTF_8);
-                byte[] tmpInput = text.getBytes(StandardCharsets.UTF_8);
-                if((sector.getSectorSize() - tmp.length) < tmpInput.length){
-                    continue;
-                } else{
-                    List<String> tmpNew = sector.getData();
-                    tmpNew.add(text);
-                    sector.setData(tmpNew);
-                    System.out.println(text + " = " + convertStringToBinary(text) + " = " +
-                            Arrays.stream(convertStringToBinary(text).split(" "))
-                            .map(binary -> Integer.parseInt(binary, 2))
-                            .map(Character::toString)
-                            .collect(Collectors.joining()));
-                    break;
+            if(!sector.getData().isEmpty()) {
+                for (String s : sector.getData()) {
+                    byte[] tmp = s.getBytes(StandardCharsets.UTF_8);
+                    System.out.println(tmp.length);
+                    byte[] tmpInput = text.getBytes(StandardCharsets.UTF_8);
+                    System.out.println(tmpInput.length);
+                    if ((sector.getSectorSize() - tmp.length) < tmpInput.length) {
+                        continue;
+                    } else {
+                        List<String> tmpNew = sector.getData();
+                        tmpNew.add(text);
+                        sector.setData(tmpNew);
+                        System.out.println(text + " = " + convertStringToBinary(text));
+                        break;
+                    }
                 }
+            } else{
+                List<String> tmp = new ArrayList<>();
+                tmp.add(text);
+                sector.setData(tmp);
+                System.out.println(text + " = " + convertStringToBinary(text));
+                break;
             }
         }
     }

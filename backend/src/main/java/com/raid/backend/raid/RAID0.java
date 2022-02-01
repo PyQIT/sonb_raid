@@ -39,21 +39,20 @@ public class RAID0 {
         }
     }
 
-    @Async
     public List<String> getData(){
         List<String> returnTexts = new ArrayList<>();
         returnTexts.addAll(diskOne.getTexts());
         returnTexts.addAll(diskSecond.getTexts());
 
+        System.out.println(returnTexts);
+
         return returnTexts;
     }
 
-    @Async
     public int disksNumber(){
         return 2;
     }
 
-    @Async
     public String getRaidType(){
         return "RAID0";
     }

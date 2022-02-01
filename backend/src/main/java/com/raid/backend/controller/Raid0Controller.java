@@ -49,19 +49,28 @@ public class Raid0Controller {
 
     @PostMapping("/sectormulfunction")
     @ResponseStatus(HttpStatus.OK)
-    public void setSectorMulfunction(@RequestBody int sectorId, int diskId) {
+    public void setSectorMulfunction(@RequestBody String data) {
+        String[] result = data.split(",");
+        int sectorId = Integer.parseInt(result[0]);
+        int diskId = Integer.parseInt(result[1]);
         raid0.setSectorMulfunction(sectorId,diskId);
     }
 
     @PostMapping("/vibrationdamage")
     @ResponseStatus(HttpStatus.OK)
-    public void setVibrationDamage(@RequestBody int sectorId, int diskId) {
+    public void setVibrationDamage(@RequestBody String data) {
+        String[] result = data.split(",");
+        int sectorId = Integer.parseInt(result[0]);
+        int diskId = Integer.parseInt(result[1]);
         raid0.setVibrationDamage(sectorId,diskId);
     }
 
     @PostMapping("/voltagesurge")
     @ResponseStatus(HttpStatus.OK)
-    public void setVoltageSurge(@RequestBody int sectorId, int diskId) {
+    public void setVoltageSurge(@RequestBody String data) {
+        String[] result = data.split(",");
+        int sectorId = Integer.parseInt(result[0]);
+        int diskId = Integer.parseInt(result[1]);
         raid0.setVoltageSurge(sectorId,diskId);
     }
 

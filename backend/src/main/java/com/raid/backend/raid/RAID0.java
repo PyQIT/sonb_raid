@@ -23,6 +23,7 @@ public class RAID0 {
         diskSecond.createSectors();
     }
 
+    @Async
     public void saveData(String data){
         if(diskOne.getTextsNumber() > diskSecond.getTextsNumber()) {
             diskSecond.saveText(data);

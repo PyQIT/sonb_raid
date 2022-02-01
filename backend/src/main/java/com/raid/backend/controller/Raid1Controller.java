@@ -26,7 +26,7 @@ public class Raid1Controller {
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.OK)
     public void saveData(@RequestBody String data) {
-        raid1.saveData(data);
+        raid1.saveData(data.substring(0,data.length() - 1));
     }
 
     @DeleteMapping("/delete")

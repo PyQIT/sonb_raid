@@ -68,7 +68,7 @@ public class Disk {
     public void saveText(String text){
         for(Sector sector: sectors){
             byte[] tmpInput = text.getBytes(StandardCharsets.UTF_8);
-            System.out.println(sector.getSectorSize() + " " + sector.getSectorOccupiedSize() + " " + tmpInput.length);
+            //System.out.println(sector.getSectorSize() + " " + sector.getSectorOccupiedSize() + " " + tmpInput.length);
             if(sector.getSectorSize() > (sector.getSectorOccupiedSize() + tmpInput.length)){
                 if(!sector.getData().isEmpty()) {
                     List<String> tmp = sector.getData();

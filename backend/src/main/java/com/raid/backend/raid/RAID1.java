@@ -27,6 +27,10 @@ public class RAID1 {
     public void saveData(String data){
         diskSecond.saveText(data);
         diskOne.saveText(data);
+
+        System.out.println("------------");
+        System.out.println(diskOne.getTextsNumber() + " " + diskSecond.getTextsNumber());
+        System.out.println("------------");
     }
 
     @Async
@@ -35,12 +39,12 @@ public class RAID1 {
         diskSecond.deleteText(data);
     }
 
-    @Async
     public List<String> getData(){
-        List<String> returnTexts = new ArrayList<>();
-        returnTexts.addAll(diskOne.getTexts());
-
-        return returnTexts;
+        if(!diskOne.getTexts().isEmpty()) {
+            return diskOne.getTexts();
+        } else {
+            return diskSecond.getTexts();
+        }
     }
 
     @Async

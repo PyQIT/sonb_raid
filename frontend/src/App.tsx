@@ -32,14 +32,14 @@ function App(this: any) {
         );
     };
 
-    const postRaidData = () => {
-        Axios.post("/text/writing", {},{params: {content: raidData}}).then(
-            (response) =>{
-                console.log(response);
-                setRaidData(response.data);
-            }
-        );
-    };
+    // const postRaidData = () => {
+    //     Axios.post("/text/writing", {},{params: {content: raidData}}).then(
+    //         (response) =>{
+    //             console.log(response);
+    //             setRaidData(response.data);
+    //         }
+    //     );
+    // };
 
     const postRaidType = () => {
         Axios.post("/raid", {},{params: {type: raidType}}).then(
@@ -60,7 +60,7 @@ function App(this: any) {
     }
 
     const getDiskSpace = () => {
-        Axios.get("/disk/space").then(
+        Axios.get("/disksize/{diskId}").then(
             (response) => {
                 console.log(response);
                 setDiskSpace(response.data);
@@ -86,24 +86,94 @@ function App(this: any) {
         );
     }
 
-    const checkRaid0 = () => {
-        raidType = "0";
-        postRaidType();
-    }
+    // const checkRaid0 = () => {
+    //     raidType = "0";
+    //     postRaidType0();
+    // }
+    //
+    // const checkRaid1 = () => {
+    //     raidType = "1";
+    //     postRaidType1();
+    // }
+    //
+    // const checkRaid2 = () => {
+    //     raidType = "2";
+    //     postRaidType3();
+    // }
+    //
+    // const onChange = (e: ChangeEvent<HTMLInputElement>)=> {
+    //     raidData = e.target.value;
+    // }
 
-    const checkRaid1 = () => {
-        raidType = "1";
-        postRaidType();
-    }
 
-    const checkRaid2 = () => {
-        raidType = "2";
-        postRaidType();
-    }
+    const getRaidType0 = () => {
+        Axios.get("/raid0/type").then(
+            (response) =>{
+                console.log(response);
+                setRaidType(response.data);
+            }
+        );
+    };
+
+    const getRaidType1 = () => {
+        Axios.get("/raid1/type").then(
+            (response) =>{
+                console.log(response);
+                setRaidType(response.data);
+            }
+        );
+    };
+
+    const getRaidType3 = () => {
+        Axios.get("/raid3/type").then(
+            (response) =>{
+                console.log(response);
+                setRaidType(response.data);
+            }
+        );
+    };
+
+
+    const postRaidType0 = () => {
+        Axios.post("/raid0/type", {}).then(
+            (response) =>{
+                console.log(response);
+                setRaidType(response.data);
+            }
+        );
+    };
+
+
+    const postRaidType1 = () => {
+        Axios.post("/raid1/type", {}).then(
+            (response) =>{
+                console.log(response);
+                setRaidType(response.data);
+            }
+        );
+    };
+
+    const postRaidType3 = () => {
+        Axios.post("/raid3/type", {}).then(
+            (response) =>{
+                console.log(response);
+                setRaidType(response.data);
+            }
+        );
+    };
+
+    const postRaidData = () => {
+        Axios.post("/raid0/save", raidData).then(
+            (response) =>{
+                console.log(response);
+                setRaidData(response.data);
+            }
+        );
+    };
 
     const onChange = (e: ChangeEvent<HTMLInputElement>)=> {
-        raidData = e.target.value;
-    }
+         raidData = e.target.value;
+     }
 
 
     // @ts-ignore
@@ -125,7 +195,7 @@ function App(this: any) {
                                 type="radio"
                                 id="f-option"
                                 name="selector"
-                                onChange={checkRaid0}
+                                onChange={getRaidType0}
                             />
                             <label htmlFor="f-option">RAID 0</label>
 
@@ -138,7 +208,7 @@ function App(this: any) {
                                 type="radio"
                                 id="s-option"
                                 name="selector"
-                                onChange={checkRaid1}
+                                onChange={getRaidType1}
                             />
                             <label htmlFor="s-option">RAID 1</label>
 
@@ -153,7 +223,7 @@ function App(this: any) {
                                 type="radio"
                                 id="t-option"
                                 name="selector"
-                                onChange={checkRaid2}
+                                onChange={getRaidType3}
                             />
                             <label htmlFor="t-option">RAID 3</label>
 
@@ -254,7 +324,7 @@ function App(this: any) {
                                         type="radio"
                                         id="f-option"
                                         name="selector"
-                                        onChange={checkRaid0}
+                                        onChange={postRaidType0}
                                     />
                                     <label htmlFor="f-option">Awaria sektora</label>
 
@@ -267,7 +337,7 @@ function App(this: any) {
                                         type="radio"
                                         id="s-option"
                                         name="selector"
-                                        onChange={checkRaid1}
+                                        onChange={postRaidType1}
                                     />
                                     <label htmlFor="s-option">Uszkodzenie wibracyjne</label>
 
@@ -282,7 +352,7 @@ function App(this: any) {
                                         type="radio"
                                         id="t-option"
                                         name="selector"
-                                        onChange={checkRaid2}
+                                        onChange={postRaidType3}
                                     />
                                     <label htmlFor="t-option">Skok napięcia</label>
 

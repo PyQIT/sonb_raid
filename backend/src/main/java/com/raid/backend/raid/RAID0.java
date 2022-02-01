@@ -84,7 +84,6 @@ public class RAID0 {
         }
     }
 
-    @Async
     public List<Integer> freeSectors(int diskId){
         if(diskId == 1){
             return diskOne.freeSectors();
@@ -94,7 +93,6 @@ public class RAID0 {
         return null;
     }
 
-    @Async
     public List<Integer> occupiedSectors(int diskId){
         if(diskId == 1){
            return diskOne.occupiedSectors();
@@ -104,7 +102,6 @@ public class RAID0 {
         return null;
     }
 
-    @Async
     public List<Integer> damagedSectors(int diskId){
         if(diskId == 1){
            return diskOne.damagedSectors();
@@ -114,7 +111,6 @@ public class RAID0 {
         return null;
     }
 
-    @Async
     public List<Integer> damagedSectorsWibrations(int diskId){
         if(diskId == 1){
            return diskOne.damagedSectorsWibrations();
@@ -124,7 +120,6 @@ public class RAID0 {
         return null;
     }
 
-    @Async
     public List<Integer> damagedSectorsVoltageSurge(int diskId){
         if(diskId == 1){
             return diskOne.damagedSectorsVoltageSurge();
@@ -134,22 +129,18 @@ public class RAID0 {
         return null;
     }
 
-    @Async
     public int diskSize(){
         return diskOne.diskSize() + diskSecond.diskSize();
     }
 
-    @Async
     public int diskSizeFree(){
         return diskOne.diskSizeFree() + diskSecond.diskSizeFree();
     }
 
-    @Async
     public int diskUsage(){
         return diskOne.diskUsage() + diskSecond.diskUsage();
     }
 
-    @Async
     public int diskUsagePercent(){
         return diskOne.diskUsagePercent() + diskSecond.diskUsagePercent();
     }

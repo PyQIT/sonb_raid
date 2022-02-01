@@ -38,6 +38,7 @@ public class Disk {
     public List<String> getTexts(){
         List<String> returnTexts = new ArrayList<>();
         for(Sector sector: sectors){
+            //System.out.println(sector.getId() + " " + sector.getDamageType());
             if(sector.getDamageType().equals(WITHOUT_DAMAGE)) {
                 for (String s : sector.getData()) {
                     returnTexts.add(s);
@@ -119,7 +120,7 @@ public class Disk {
     public List<Integer> damagedSectors(){
         List<Integer> returnSectorId = new ArrayList<Integer>();
         for(Sector sector: sectors){
-            if(!sector.getDamageType().equals(SECTOR_MULFUNCTION)){
+            if(sector.getDamageType().equals(SECTOR_MULFUNCTION)){
                 returnSectorId.add(sector.getId());
             }
         }

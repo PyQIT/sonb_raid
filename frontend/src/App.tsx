@@ -16,6 +16,10 @@ function App(this: any) {
     let [diskUsage, setDiskUsage] = useState("");
     let [diskByIdRead, setDiskByIdRead] = useState("");
     let [diskDelete, setDiskDelete] = useState("");
+    let [sectorMulfunction, setSectorMulfunction] = useState("");
+    let [voltageSpike, setVoltageSpike] = useState("");
+    let [vibrationDamage, setVibrationDamage] = useState("");
+
 
 
     const postNewDisk = () => {
@@ -197,6 +201,33 @@ function App(this: any) {
          raidData = e.target.value;
      }
 
+    const postSectorMulfunction= () => {
+        Axios.post("/raid0/sectormulfunction", {}).then(
+            (response) =>{
+                console.log(response);
+                setSectorMulfunction(response.data);
+            }
+        );
+    };
+
+    const postVibrationDamage= () => {
+        Axios.post("/raid0/vibrationdamage", {}).then(
+            (response) =>{
+                console.log(response);
+                setVibrationDamage(response.data);
+            }
+        );
+    };
+
+    const postVoltageSurge= () => {
+        Axios.post("/raid0/voltagesurge", {}).then(
+            (response) =>{
+                console.log(response);
+                setVoltageSpike(response.data);
+            }
+        );
+    };
+
 
     // @ts-ignore
     return (
@@ -349,7 +380,7 @@ function App(this: any) {
                                         type="radio"
                                         id="f-option"
                                         name="selector"
-                                        onChange={postRaidType0}
+                                        onChange={postSectorMulfunction}
                                     />
                                     <label htmlFor="f-option">Awaria sektora</label>
 

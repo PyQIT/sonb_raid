@@ -47,8 +47,6 @@ public class RAID0 {
         returnTexts.addAll(diskOne.getTexts());
         returnTexts.addAll(diskSecond.getTexts());
 
-        System.out.println(returnTexts);
-
         return returnTexts;
     }
 

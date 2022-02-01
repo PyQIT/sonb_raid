@@ -74,7 +74,6 @@ public class RAID3 {
         }
     }
 
-    @Async
     public List<String> getData(){
         List<String> returnTexts = new ArrayList<>();
         returnTexts.addAll(diskOne.getTexts());
@@ -114,12 +113,10 @@ public class RAID3 {
         return result;
     }
 
-    @Async
     public int disksNumber(){
         return 4;
     }
 
-    @Async
     public String getRaidType(){
         return "RAID3";
     }
@@ -157,7 +154,6 @@ public class RAID3 {
         }
     }
 
-    @Async
     public List<Integer> freeSectors(int diskId){
         if(diskId == 1){
             return diskOne.freeSectors();
@@ -169,7 +165,6 @@ public class RAID3 {
         return null;
     }
 
-    @Async
     public List<Integer> occupiedSectors(int diskId){
         if(diskId == 1){
             return diskOne.occupiedSectors();
@@ -181,7 +176,6 @@ public class RAID3 {
         return null;
     }
 
-    @Async
     public List<Integer> damagedSectors(int diskId){
         if(diskId == 1){
             return diskOne.damagedSectors();
@@ -193,7 +187,6 @@ public class RAID3 {
         return null;
     }
 
-    @Async
     public List<Integer> damagedSectorsWibrations(int diskId){
         if(diskId == 1){
             return diskOne.damagedSectorsWibrations();
@@ -205,7 +198,6 @@ public class RAID3 {
         return null;
     }
 
-    @Async
     public List<Integer> damagedSectorsVoltageSurge(int diskId){
         if(diskId == 1){
             return diskOne.damagedSectorsVoltageSurge();
@@ -217,40 +209,15 @@ public class RAID3 {
         return null;
     }
 
-    @Async
-    public int diskSize(int diskId){
-        if(diskId == 1){
-            return diskOne.diskSize();
-        }else if(diskId == 2){
-            return diskSecond.diskSize();
-        }else if(diskId == 3){
-            return diskThird.diskSize();
-        }
-        return 0;
+    public int diskSize(){
+        return diskOne.diskSize() + diskSecond.diskSize() + diskThird.diskSize();
     }
 
-    @Async
-    public int diskSizeFree(int diskId){
-        if(diskId == 1){
-            return diskOne.diskSizeFree();
-        }else if(diskId == 2){
-            return diskSecond.diskSizeFree();
-        }else if(diskId == 3){
-            return diskThird.diskSizeFree();
-        }
-        return 0;
+    public int diskSizeFree(){
+        return diskOne.diskSizeFree() + diskSecond.diskSizeFree() + diskThird.diskSizeFree();
     }
 
-    @Async
-    public int diskUsage(int diskId){
-        if(diskId == 1){
-            return diskOne.diskUsage();
-        }else if(diskId == 2){
-            return diskSecond.diskUsage();
-        }else if(diskId == 3){
-            return diskThird.diskUsage();
-        }
-        return 0;
+    public int diskUsage(){
+        return diskOne.diskUsage() + diskSecond.diskUsage() + diskThird.diskUsage();
     }
-
 }

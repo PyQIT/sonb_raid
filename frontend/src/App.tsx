@@ -12,8 +12,14 @@ function App(this: any) {
     let [newDisk, setNewDisk] = useState("");
     let [raidReceived, setRaidReceived] = useState("");
     let [diskSpace, setDiskSpace] = useState("");
+    let [diskFreeSpace, setFreeSize] = useState("");
+    let [diskUsage, setDiskUsage] = useState("");
     let [diskByIdRead, setDiskByIdRead] = useState("");
     let [diskDelete, setDiskDelete] = useState("");
+    let [sectorMulfunction, setSectorMulfunction] = useState("");
+    let [voltageSpike, setVoltageSpike] = useState("");
+    let [vibrationDamage, setVibrationDamage] = useState("");
+
 
 
     const postNewDisk = () => {
@@ -61,13 +67,32 @@ function App(this: any) {
     }
 
     const getDiskSpace = () => {
-        Axios.get("/disksize/{diskId}").then(
+        Axios.get("raid0/disksize").then(
             (response) => {
                 console.log(response);
                 setDiskSpace(response.data);
             }
         );
     }
+
+    const getDiskFree = () => {
+        Axios.get("raid0/disksizefree").then(
+            (response) => {
+                console.log(response);
+                setFreeSize(response.data);
+            }
+        );
+    }
+
+    const getDiskUsage = () => {
+        Axios.get("raid0/diskusage").then(
+            (response) => {
+                console.log(response);
+                setDiskUsage(response.data);
+            }
+        );
+    }
+
 
     const getDiskByIdRead = () => {
         Axios.get("/disk/read/{id}").then(
@@ -176,6 +201,33 @@ function App(this: any) {
          raidData = e.target.value;
      }
 
+    const postSectorMulfunction= () => {
+        Axios.post("/raid0/sectormulfunction", {}).then(
+            (response) =>{
+                console.log(response);
+                setSectorMulfunction(response.data);
+            }
+        );
+    };
+
+    const postVibrationDamage= () => {
+        Axios.post("/raid0/vibrationdamage", {}).then(
+            (response) =>{
+                console.log(response);
+                setVibrationDamage(response.data);
+            }
+        );
+    };
+
+    const postVoltageSurge= () => {
+        Axios.post("/raid0/voltagesurge", {}).then(
+            (response) =>{
+                console.log(response);
+                setVoltageSpike(response.data);
+            }
+        );
+    };
+
 
     // @ts-ignore
     return (
@@ -269,15 +321,17 @@ function App(this: any) {
                         <li>
                             Wielkość dysku:
                             {getDiskSpace}
+                            <p>{diskSpace}</p>
                         </li>
                         <li>
                             Wolne miejsce:
+                            {getDiskFree}
+                            <p>{diskFreeSpace}</p>
                         </li>
                         <li>
                             Użycie dysku:
-                        </li>
-                        <li>
-                            Użycie dysku w procentach:
+                            {getDiskUsage}
+                            <p>{diskUsage}</p>
                         </li>
                     </ul>
 
@@ -286,6 +340,7 @@ function App(this: any) {
                     <ul>
                         <li>
                             Identyfikatory wolnych sektorów:
+
                         </li>
                         <li>
                             Identyfikatory sektorów, które są używane:
@@ -325,7 +380,7 @@ function App(this: any) {
                                         type="radio"
                                         id="f-option"
                                         name="selector"
-                                        onChange={postRaidType0}
+                                        onChange={postSectorMulfunction}
                                     />
                                     <label htmlFor="f-option">Awaria sektora</label>
 
@@ -338,7 +393,7 @@ function App(this: any) {
                                         type="radio"
                                         id="s-option"
                                         name="selector"
-                                        onChange={postRaidType1}
+                                        onChange={postVibrationDamage}
                                     />
                                     <label htmlFor="s-option">Uszkodzenie wibracyjne</label>
 
@@ -353,7 +408,7 @@ function App(this: any) {
                                         type="radio"
                                         id="t-option"
                                         name="selector"
-                                        onChange={postRaidType3}
+                                        onChange={postVoltageSurge}
                                     />
                                     <label htmlFor="t-option">Skok napięcia</label>
 

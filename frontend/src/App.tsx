@@ -19,6 +19,9 @@ function App(this: any) {
     let [sectorMulfunction, setSectorMulfunction] = useState("");
     let [voltageSpike, setVoltageSpike] = useState("");
     let [vibrationDamage, setVibrationDamage] = useState("");
+    let [freeSectors, setFreeSectors] = useState("");
+    let [occupiedSectors, setOccupiedSectors] = useState("");
+    let [damagedSectors, setDamagedSectors] = useState("");
 
 
 
@@ -99,10 +102,39 @@ function App(this: any) {
         {getDiskUsage()}
     };
 
-    const onChangeStats = (e: ChangeEvent<HTMLInputElement>)=> {
-        diskSpace = e.target.value;
-        diskFreeSpace = e.target.value;
-        diskUsage = e.target.value;
+
+    const getFreeSectors = () => {
+        Axios.get("raid0/freesectors/{diskId}").then(
+            (response) => {
+                console.log(response);
+                setFreeSectors(response.data);
+            }
+        );
+    }
+
+    const getOccupiedSectors = () => {
+        Axios.get("raid0/occupiedsectors/{diskId}").then(
+            (response) => {
+                console.log(response);
+                setOccupiedSectors(response.data);
+            }
+        );
+    }
+
+
+    const displayStats= () => {
+        {getFreeSectors()}
+        {getOccupiedSectors()}
+    };
+
+
+    const getDamagedSectors = () => {
+        Axios.get("raid0/damagedsectors/{diskId}").then(
+            (response) => {
+                console.log(response);
+                setDamagedSectors(response.data);
+            }
+        );
     }
 
     const getDiskByIdRead = () => {
@@ -215,7 +247,7 @@ function App(this: any) {
      }
 
     const postSectorMulfunction= () => {
-        Axios.post("/raid0/sectormulfunction", {}).then(
+        Axios.post("/raid0/sectormulfunction", sectorMulfunction).then(
             (response) =>{
                 console.log(response);
                 setSectorMulfunction(response.data);
@@ -224,7 +256,7 @@ function App(this: any) {
     };
 
     const postVibrationDamage= () => {
-        Axios.post("/raid0/vibrationdamage", {}).then(
+        Axios.post("/raid0/vibrationdamage", vibrationDamage).then(
             (response) =>{
                 console.log(response);
                 setVibrationDamage(response.data);
@@ -233,13 +265,19 @@ function App(this: any) {
     };
 
     const postVoltageSurge= () => {
-        Axios.post("/raid0/voltagesurge", {}).then(
+        Axios.post("/raid0/voltagesurge", voltageSpike).then(
             (response) =>{
                 console.log(response);
                 setVoltageSpike(response.data);
             }
         );
     };
+
+    const onChangeProblems = (e: ChangeEvent<HTMLInputElement>)=> {
+        sectorMulfunction = e.target.value;
+        vibrationDamage = e.target.value;
+        voltageSpike = e.target.value;
+    }
 
 
 
@@ -353,18 +391,21 @@ function App(this: any) {
                     <ul>
                         <li>
                             Identyfikatory wolnych sektorów:
-
+                            {freeSectors}
                         </li>
                         <li>
                             Identyfikatory sektorów, które są używane:
+                            {occupiedSectors}
                         </li>
                     </ul>
+
+                    <a className="button" onClick={displayStats}>Odbierz</a>
 
                 <h3>Uszkodzone sektory</h3>
                 <ul>
                     <li>
                         Identyfikatory uszkodzonych sektorów (awaria):
-
+                        {damagedSectors}
                     </li>
                 </ul>
 
@@ -388,62 +429,21 @@ function App(this: any) {
                         <div className="radioButtonsContainer">
                             <h3>Wybierz typ uszkodzenia</h3>
 
-                            <ul>
-                                <li>
-                                    <input
-                                        type="radio"
-                                        id="f-option"
-                                        name="selector"
-                                        onChange={postSectorMulfunction}
-                                    />
-                                    <label htmlFor="f-option">Awaria sektora</label>
-
-                                    <div className="check"></div>
-
-                                </li>
-
-                                <li>
-                                    <input
-                                        type="radio"
-                                        id="s-option"
-                                        name="selector"
-                                        onChange={postVibrationDamage}
-                                    />
-                                    <label htmlFor="s-option">Uszkodzenie wibracyjne</label>
-
-                                    <div className="check">
-                                        <div className="inside"></div>
-                                    </div>
-
-                                </li>
-
-                                <li>
-                                    <input
-                                        type="radio"
-                                        id="t-option"
-                                        name="selector"
-                                        onChange={postVoltageSurge}
-                                    />
-                                    <label htmlFor="t-option">Skok napięcia</label>
-
-                                    <div className="check">
-                                        <div className="inside"></div>
-                                    </div>
-
-                                </li>
-                            </ul>
-                        </div>
                         <form className="dmgForm" action="#" method="post">
                             <h3>Podaj ID sektora do uszkodzenia:</h3>
-                            <input type="text" id="f-id" name="selector"></input>
+                            <input type="text" id="f-id" name="selector" onChange={onChangeProblems}></input>
                         </form>
+
                         {"\n"}
-                        <a className="button" onClick={postRaidData}>Wyślij</a>
+                        <a className="button" onClick={postSectorMulfunction}>Wyślij awarie sektora</a>
+                        <a className="button" onClick={postVibrationDamage}>Wyślij uszkodzenie wybracyjne</a>
+                        <a className="button" onClick={postVoltageSurge}>Wyślij skok napiecia</a>
                     </div>
                 </div>
+
+
+        </div>
             </div>
-
-
         </div>
     );
 

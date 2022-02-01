@@ -49,67 +49,70 @@ public class Raid1Controller {
 
     @PostMapping("/sectormulfunction")
     @ResponseStatus(HttpStatus.OK)
-    public void setSectorMulfunction(@RequestBody int sectorId, int diskId) {
-        raid1.setSectorMulfunction(sectorId,diskId);
+    public void setSectorMulfunction(@RequestBody String data) {
+        int sectorId = Integer.parseInt(data);
+        raid1.setSectorMulfunction(sectorId);
     }
 
     @PostMapping("/vibrationdamage")
     @ResponseStatus(HttpStatus.OK)
-    public void setVibrationDamage(@RequestBody int sectorId, int diskId) {
-        raid1.setVibrationDamage(sectorId,diskId);
+    public void setVibrationDamage(@RequestBody String data) {
+        int sectorId = Integer.parseInt(data);
+        raid1.setVibrationDamage(sectorId);
     }
 
     @PostMapping("/voltagesurge")
     @ResponseStatus(HttpStatus.OK)
-    public void setVoltageSurge(@RequestBody int sectorId, int diskId) {
-        raid1.setVoltageSurge(sectorId,diskId);
+    public void setVoltageSurge(@RequestBody String data) {
+        int sectorId = Integer.parseInt(data);
+        raid1.setVoltageSurge(sectorId);
     }
 
-    @GetMapping("/freesectors/{diskId}")
+    @GetMapping("/freesectors")
     @ResponseStatus(HttpStatus.OK)
-    public List<Integer> getFreeSectors(@PathVariable int diskId) {
-        return raid1.freeSectors(diskId);
+    public List<Integer> getFreeSectors() {
+        return raid1.freeSectors();
     }
 
-    @GetMapping("/occupiedsectors/{diskId}")
+    @GetMapping("/occupiedsectors")
     @ResponseStatus(HttpStatus.OK)
-    public List<Integer> getOccupiedSectors(@PathVariable int diskId) {
-        return raid1.occupiedSectors(diskId);
+    public List<Integer> getOccupiedSectors() {
+        return raid1.occupiedSectors();
     }
 
-    @GetMapping("/damagedsectors/{diskId}")
+    @GetMapping("/damagedsectors")
     @ResponseStatus(HttpStatus.OK)
-    public List<Integer> getDamagedSectors(@PathVariable int diskId) {
-        return raid1.damagedSectors(diskId);
+    public List<Integer> getDamagedSectors() {
+        return raid1.damagedSectors();
     }
 
-    @GetMapping("/damagedsectorswibrations/{diskId}")
+    @GetMapping("/damagedsectorswibrations")
     @ResponseStatus(HttpStatus.OK)
-    public List<Integer> getDamagedSectorsWibrations(@PathVariable int diskId) {
-        return raid1.damagedSectorsWibrations(diskId);
+    public List<Integer> getDamagedSectorsWibrations() {
+        return raid1.damagedSectorsWibrations();
     }
 
-    @GetMapping("/damagedsectorsvoltagesurge/{diskId}")
+    @GetMapping("/damagedsectorsvoltagesurge")
     @ResponseStatus(HttpStatus.OK)
-    public List<Integer> getDamagedSectorsVoltageSurge(@PathVariable int diskId) {
-        return raid1.damagedSectorsVoltageSurge(diskId);
+    public List<Integer> getDamagedSectorsVoltageSurge() {
+        return raid1.damagedSectorsVoltageSurge();
     }
 
-    @GetMapping("/disksize/{diskId}")
+    @GetMapping("/disksize")
     @ResponseStatus(HttpStatus.OK)
-    public int getDiskSize(@PathVariable int diskId) {
-        return raid1.diskSize(diskId);
+    public int getDiskSize() {
+        return raid1.diskSize();
     }
 
-    @GetMapping("/disksizefree/{diskId}")
+    @GetMapping("/disksizefree")
     @ResponseStatus(HttpStatus.OK)
-    public int getDiskSizeFree(@PathVariable int diskId) {
-        return raid1.diskSizeFree(diskId);
+    public int getDiskSizeFree() {
+        return raid1.diskSizeFree();
     }
 
-    @GetMapping("/diskusage/{diskId}")
+    @GetMapping("/diskusage")
     @ResponseStatus(HttpStatus.OK)
-    public int getDiskUsage(@PathVariable int diskId) {
-        return raid1.diskUsage(diskId);
+    public int getDiskUsage() {
+        return raid1.diskUsage();
     }
 }

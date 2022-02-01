@@ -24,14 +24,14 @@ public class RAID0 {
     }
 
     public void saveData(String data){
-        System.out.println("------------");
-        System.out.println(diskOne.getTextsNumber() + " " + diskSecond.getTextsNumber());
-        System.out.println("------------");
         if(diskOne.getTextsNumber() > diskSecond.getTextsNumber()) {
             diskSecond.saveText(data);
         }else{
             diskOne.saveText(data);
         }
+        System.out.println("------------");
+        System.out.println(diskOne.getTextsNumber() + " " + diskSecond.getTextsNumber());
+        System.out.println("------------");
     }
 
     @Async

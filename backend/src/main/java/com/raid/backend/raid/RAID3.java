@@ -1,11 +1,13 @@
 package com.raid.backend.raid;
 
 import com.raid.backend.disk.Disk;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class RAID3 {
     Disk diskOne;
     Disk diskSecond;
@@ -114,5 +116,134 @@ public class RAID3 {
 
     public String getRaidType(){
         return "RAID3";
+    }
+
+    public void setSectorMulfunction(int sectorId, int diskId) {
+        if(diskId == 1){
+            diskOne.setSectorMulfunction(sectorId);
+        }else if(diskId == 2){
+            diskSecond.setSectorMulfunction(sectorId);
+        }else if(diskId == 3){
+            diskThird.setSectorMulfunction(sectorId);
+        }
+    }
+
+    public void setVibrationDamage(int sectorId, int diskId){
+        if(diskId == 1){
+            diskOne.setVibrationDamage(sectorId);
+        }else if(diskId == 2){
+            diskSecond.setVibrationDamage(sectorId);
+        }else if(diskId == 3){
+            diskThird.setVibrationDamage(sectorId);
+        }
+    }
+
+    public void setVoltageSurge(int sectorId, int diskId){
+        if(diskId == 1){
+            diskOne.setVoltageSurge(sectorId);
+        }else if(diskId == 2){
+            diskSecond.setVoltageSurge(sectorId);
+        }else if(diskId == 3){
+            diskThird.setVoltageSurge(sectorId);
+        }
+    }
+
+    public List<Integer> freeSectors(int diskId){
+        if(diskId == 1){
+            return diskOne.freeSectors();
+        }else if(diskId == 2){
+            return diskSecond.freeSectors();
+        }else if(diskId == 3){
+            return diskThird.freeSectors();
+        }
+        return null;
+    }
+
+    public List<Integer> occupiedSectors(int diskId){
+        if(diskId == 1){
+            return diskOne.occupiedSectors();
+        }else if(diskId == 2){
+            return diskSecond.occupiedSectors();
+        }else if(diskId == 3){
+            return diskThird.occupiedSectors();
+        }
+        return null;
+    }
+
+    public List<Integer> damagedSectors(int diskId){
+        if(diskId == 1){
+            return diskOne.damagedSectors();
+        }else if(diskId == 2){
+            return diskSecond.damagedSectors();
+        }else if(diskId == 3){
+            return diskThird.damagedSectors();
+        }
+        return null;
+    }
+
+    public List<Integer> damagedSectorsWibrations(int diskId){
+        if(diskId == 1){
+            return diskOne.damagedSectorsWibrations();
+        }else if(diskId == 2){
+            return diskSecond.damagedSectorsWibrations();
+        }else if(diskId == 3){
+            return diskThird.damagedSectorsWibrations();
+        }
+        return null;
+    }
+
+    public List<Integer> damagedSectorsVoltageSurge(int diskId){
+        if(diskId == 1){
+            return diskOne.damagedSectorsVoltageSurge();
+        }else if(diskId == 2){
+            return diskSecond.damagedSectorsVoltageSurge();
+        }else if(diskId == 3){
+            return diskThird.damagedSectorsVoltageSurge();
+        }
+        return null;
+    }
+
+    public int diskSize(int diskId){
+        if(diskId == 1){
+            return diskOne.diskSize();
+        }else if(diskId == 2){
+            return diskSecond.diskSize();
+        }else if(diskId == 3){
+            return diskThird.diskSize();
+        }
+        return 0;
+    }
+
+    public int diskSizeFree(int diskId){
+        if(diskId == 1){
+            return diskOne.diskSizeFree();
+        }else if(diskId == 2){
+            return diskSecond.diskSizeFree();
+        }else if(diskId == 3){
+            return diskThird.diskSizeFree();
+        }
+        return 0;
+    }
+
+    public int diskUsage(int diskId){
+        if(diskId == 1){
+            return diskOne.diskUsage();
+        }else if(diskId == 2){
+            return diskSecond.diskUsage();
+        }else if(diskId == 3){
+            return diskThird.diskUsage();
+        }
+        return 0;
+    }
+
+    public int diskUsagePercent(int diskId){
+        if(diskId == 1){
+            return diskOne.diskUsagePercent();
+        }else if(diskId == 2){
+            return diskSecond.diskUsagePercent();
+        }else if(diskId == 3){
+            return diskThird.diskUsagePercent();
+        }
+        return 0;
     }
 }

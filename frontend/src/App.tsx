@@ -54,7 +54,8 @@ function App(this: any) {
         Axios.get("/raid0/").then(
             (response) => {
                 console.log(response);
-                setRaidReceived(response.data);
+                var printString = response.data.join(' ');
+                setRaidReceived(printString);
             }
         );
     }

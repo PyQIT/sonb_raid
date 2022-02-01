@@ -104,7 +104,7 @@ function App(this: any) {
 
 
     const getFreeSectors = () => {
-        Axios.get("raid0/freesectors/{diskId}").then(
+        Axios.get("raid0/freesectors").then(
             (response) => {
                 console.log(response);
                 setFreeSectors(response.data);
@@ -113,7 +113,7 @@ function App(this: any) {
     }
 
     const getOccupiedSectors = () => {
-        Axios.get("raid0/occupiedsectors/{diskId}").then(
+        Axios.get("raid0/occupiedsectors").then(
             (response) => {
                 console.log(response);
                 setOccupiedSectors(response.data);
@@ -129,7 +129,7 @@ function App(this: any) {
 
 
     const getDamagedSectors = () => {
-        Axios.get("raid0/damagedsectors/{diskId}").then(
+        Axios.get("raid0/damagedsectors").then(
             (response) => {
                 console.log(response);
                 setDamagedSectors(response.data);

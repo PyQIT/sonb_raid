@@ -54,110 +54,68 @@ public class RAID1 {
     }
 
     @Async
-    public void setSectorMulfunction(int sectorId, int diskId) {
-        if(diskId == 1){
-            diskOne.setSectorMulfunction(sectorId);
-        }else if(diskId == 2){
-            diskSecond.setSectorMulfunction(sectorId);
-        }
+    public void setSectorMulfunction(int sectorId) {
+        diskOne.setSectorMulfunction(sectorId);
+        diskSecond.setSectorMulfunction(sectorId);
     }
 
     @Async
-    public void setVibrationDamage(int sectorId, int diskId){
-        if(diskId == 1){
-            diskOne.setVibrationDamage(sectorId);
-        }else if(diskId == 2){
-            diskSecond.setVibrationDamage(sectorId);
-        }
+    public void setVibrationDamage(int sectorId){
+        diskOne.setVibrationDamage(sectorId);
+        diskSecond.setVibrationDamage(sectorId);
     }
 
     @Async
-    public void setVoltageSurge(int sectorId, int diskId){
-        if(diskId == 1){
-            diskOne.setVoltageSurge(sectorId);
-        }else if(diskId == 2){
-            diskSecond.setVoltageSurge(sectorId);
-        }
+    public void setVoltageSurge(int sectorId){
+        diskOne.setVoltageSurge(sectorId);
+        diskSecond.setVoltageSurge(sectorId);
     }
 
-    @Async
-    public List<Integer> freeSectors(int diskId){
-        if(diskId == 1){
+    public List<Integer> freeSectors(){
+        if(!diskOne.freeSectors().isEmpty())
             return diskOne.freeSectors();
-        }else if(diskId == 2){
+        else
             return diskSecond.freeSectors();
-        }
-        return null;
     }
 
-    @Async
-    public List<Integer> occupiedSectors(int diskId){
-        if(diskId == 1){
+    public List<Integer> occupiedSectors(){
+        if(!diskOne.occupiedSectors().isEmpty())
             return diskOne.occupiedSectors();
-        }else if(diskId == 2){
+        else
             return diskSecond.occupiedSectors();
-        }
-        return null;
     }
 
-    @Async
-    public List<Integer> damagedSectors(int diskId){
-        if(diskId == 1){
+    public List<Integer> damagedSectors(){
+        if(!diskOne.damagedSectors().isEmpty())
             return diskOne.damagedSectors();
-        }else if(diskId == 2){
+        else
             return diskSecond.damagedSectors();
-        }
-        return null;
     }
 
-    @Async
-    public List<Integer> damagedSectorsWibrations(int diskId){
-        if(diskId == 1){
+    public List<Integer> damagedSectorsWibrations(){
+        if(!diskOne.damagedSectorsWibrations().isEmpty())
             return diskOne.damagedSectorsWibrations();
-        }else if(diskId == 2){
+        else
             return diskSecond.damagedSectorsWibrations();
-        }
-        return null;
     }
 
-    @Async
-    public List<Integer> damagedSectorsVoltageSurge(int diskId){
-        if(diskId == 1){
+    public List<Integer> damagedSectorsVoltageSurge(){
+        if(!diskOne.damagedSectorsVoltageSurge().isEmpty())
             return diskOne.damagedSectorsVoltageSurge();
-        }else if(diskId == 2){
+        else
             return diskSecond.damagedSectorsVoltageSurge();
-        }
-        return null;
     }
 
-    @Async
-    public int diskSize(int diskId){
-        if(diskId == 1){
-            return diskOne.diskSize();
-        }else if(diskId == 2){
-            return diskSecond.diskSize();
-        }
-        return 0;
+    public int diskSize(){
+        return diskOne.diskSize();
     }
 
-    @Async
-    public int diskSizeFree(int diskId){
-        if(diskId == 1){
-            return diskOne.diskSizeFree();
-        }else if(diskId == 2){
-            return diskSecond.diskSizeFree();
-        }
-        return 0;
+    public int diskSizeFree(){
+        return diskOne.diskSizeFree();
     }
 
-    @Async
-    public int diskUsage(int diskId){
-        if(diskId == 1){
-            return diskOne.diskUsage();
-        }else if(diskId == 2){
-            return diskSecond.diskUsage();
-        }
-        return 0;
+    public int diskUsage(){
+        return diskOne.diskUsage();
     }
 
 }

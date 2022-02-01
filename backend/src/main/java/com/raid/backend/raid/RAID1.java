@@ -160,13 +160,4 @@ public class RAID1 {
         return 0;
     }
 
-    @Async
-    public int diskUsagePercent(int diskId){
-        if(diskId == 1){
-            return diskOne.diskUsagePercent();
-        }else if(diskId == 2){
-            return diskSecond.diskUsagePercent();
-        }
-        return 0;
-    }
 }

@@ -113,10 +113,4 @@ public class Raid0Controller {
         return raid0.diskUsage();
     }
 
-    @GetMapping("/diskusagepercent")
-    @ResponseStatus(HttpStatus.OK)
-    public int getDiskUsagePercent() {
-        return raid0.diskUsagePercent();
-    }
-
 }

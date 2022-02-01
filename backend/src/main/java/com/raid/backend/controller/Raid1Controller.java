@@ -112,11 +112,4 @@ public class Raid1Controller {
     public int getDiskUsage(@PathVariable int diskId) {
         return raid1.diskUsage(diskId);
     }
-
-    @GetMapping("/diskusagepercent/{diskId}")
-    @ResponseStatus(HttpStatus.OK)
-    public int getDiskUsagePercent(@PathVariable int diskId) {
-        return raid1.diskUsagePercent(diskId);
-    }
-
 }

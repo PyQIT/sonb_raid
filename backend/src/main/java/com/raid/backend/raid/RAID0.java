@@ -141,7 +141,4 @@ public class RAID0 {
         return diskOne.diskUsage() + diskSecond.diskUsage();
     }
 
-    public int diskUsagePercent(){
-        return diskOne.diskUsagePercent() + diskSecond.diskUsagePercent();
-    }
 }

@@ -196,7 +196,7 @@ public class Disk {
         return diskUsageSize;
     }
 
-    public int diskUsagePercent(){
+    public double diskUsagePercent(){
         return (diskUsage()/diskSize())/100;
     }
 

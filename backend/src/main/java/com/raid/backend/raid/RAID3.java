@@ -253,15 +253,4 @@ public class RAID3 {
         return 0;
     }
 
-    @Async
-    public int diskUsagePercent(int diskId){
-        if(diskId == 1){
-            return diskOne.diskUsagePercent();
-        }else if(diskId == 2){
-            return diskSecond.diskUsagePercent();
-        }else if(diskId == 3){
-            return diskThird.diskUsagePercent();
-        }
-        return 0;
-    }
 }

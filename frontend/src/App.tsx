@@ -393,7 +393,7 @@ function App(this: any) {
                                         type="radio"
                                         id="s-option"
                                         name="selector"
-                                        onChange={postRaidType1}
+                                        onChange={postVibrationDamage}
                                     />
                                     <label htmlFor="s-option">Uszkodzenie wibracyjne</label>
 
@@ -408,7 +408,7 @@ function App(this: any) {
                                         type="radio"
                                         id="t-option"
                                         name="selector"
-                                        onChange={postRaidType3}
+                                        onChange={postVoltageSurge}
                                     />
                                     <label htmlFor="t-option">Skok napięcia</label>
 

@@ -3,6 +3,7 @@ package com.raid.backend.disk;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,5 +20,7 @@ public class Sector {
         this.id = id;
         this.sectorSize = sectorSize;
         damageType = DamageType.WITHOUT_DAMAGE;
+        data = new ArrayList<>();
+        checkSum = new ArrayList<>();
     }
 }

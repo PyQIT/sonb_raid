@@ -58,8 +58,10 @@ public class Disk {
         int returnTextsNumber = 0;
         for(Sector sector: sectors){
             if(sector.getDamageType().equals(WITHOUT_DAMAGE)) {
-                for (String s : sector.getData()) {
-                    returnTextsNumber += 1;
+                if(!sector.getData().isEmpty()) {
+                    for (String s : sector.getData()) {
+                        returnTextsNumber += 1;
+                    }
                 }
             }
         }

@@ -56,7 +56,7 @@ public class Raid0Controller {
         raid0.setSectorMulfunction(sectorId,diskId);
     }
 
-    @PostMapping("/vibrationdamage")
+    @PostMapping("/")
     @ResponseStatus(HttpStatus.OK)
     public void setVibrationDamage(@RequestBody String data) {
         String[] result = data.split(",");

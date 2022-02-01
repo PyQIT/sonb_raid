@@ -93,6 +93,17 @@ function App(this: any) {
         );
     }
 
+    const display= () => {
+        {getDiskSpace()}
+        {getDiskFree()}
+        {getDiskUsage()}
+    };
+
+    const onChangeStats = (e: ChangeEvent<HTMLInputElement>)=> {
+        diskSpace = e.target.value;
+        diskFreeSpace = e.target.value;
+        diskUsage = e.target.value;
+    }
 
     const getDiskByIdRead = () => {
         Axios.get("/disk/read/{id}").then(
@@ -197,6 +208,8 @@ function App(this: any) {
         );
     };
 
+
+
     const onChange = (e: ChangeEvent<HTMLInputElement>)=> {
          raidData = e.target.value;
      }
@@ -227,6 +240,8 @@ function App(this: any) {
             }
         );
     };
+
+
 
 
     // @ts-ignore
@@ -320,19 +335,17 @@ function App(this: any) {
                     <ul>
                         <li>
                             Wielkość dysku:
-                            {getDiskSpace}
                             <p>{diskSpace}</p>
                         </li>
                         <li>
                             Wolne miejsce:
-                            {getDiskFree}
                             <p>{diskFreeSpace}</p>
                         </li>
                         <li>
                             Użycie dysku:
-                            {getDiskUsage}
                             <p>{diskUsage}</p>
                         </li>
+                        <a className="button" onClick={display}>Odbierz</a>
                     </ul>
 
                     <h3>Statystyki użycia sektorów</h3>
@@ -351,6 +364,7 @@ function App(this: any) {
                 <ul>
                     <li>
                         Identyfikatory uszkodzonych sektorów (awaria):
+
                     </li>
                 </ul>
 

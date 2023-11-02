@@ -1,10 +1,6 @@
 # sonb_raid
 
 Projekt 3 - RAID
-
-Grupa projektowa:
-Przemysław Pyk
-Krzysztof Siczek
  
 RAID to technologia wirtualizacji przechowywania danych, która łączy wiele komponentów dysków fizycznych w jedną lub więcej jednostek logicznych w celu redundancji danych,poprawy wydajności lub obu. Było to sprzeczne z poprzednią koncepcją wysoce niezawodnych dysków mainframe określanych jako "pojedynczy duży drogi dysk" (SLED).
 
